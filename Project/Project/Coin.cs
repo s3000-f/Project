@@ -18,6 +18,7 @@ namespace Project
         Vector2 recSpeed;
         Vector2 recAcc;
         ContentManager Content;
+        //asdasdasd
         SoundEffect collisSound;
         SoundEffectInstance se_Instance;
 
