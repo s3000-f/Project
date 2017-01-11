@@ -101,7 +101,7 @@ namespace Project
 
             if (soundEngineInstance.State == SoundState.Stopped)
             {
-                soundEngineInstance.Volume = 0.75f;
+                soundEngineInstance.Volume = 0.5f;
                 soundEngineInstance.IsLooped = true;
                 soundEngineInstance.Play();
             }
@@ -140,7 +140,7 @@ namespace Project
                 Console.WriteLine("Up Bottom: " + barry.isBottom());
                 barry.walk(gameTime);
             }
-            for (int i = 0; i < 200; i++) coinList[i].move();
+            for (int i = 0; i < 200; i++) coinList[i].move(gameTime);
             background.move();
             background.switchBack();
             background2.move();

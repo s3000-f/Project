@@ -32,9 +32,9 @@ namespace Project
         public void jump(GameTime gameTime)
         {
             if (isBottom())
-                position.Y = MaxY - position.Height;
-            if (position.Y < 0)
-                position.Y = 0;
+                position.Y = MaxY - position.Height-25;
+            if (isTop())
+                position.Y = 26;
             float time = (float)gameTime.ElapsedGameTime.TotalMilliseconds/4f;
             Console.WriteLine("Time: " + time);
             if(recSpeed.Y>-5)
@@ -55,10 +55,10 @@ namespace Project
         }
         public void fall(GameTime gameTime)
         {
-            if (position.Y < 0)
-                position.Y = 0;
+            if (isTop())
+                position.Y = 35;
             if (isBottom())
-                position.Y = MaxY-position.Height;
+                position.Y = MaxY-position.Height-25;
             float time =(float) gameTime.ElapsedGameTime.TotalMilliseconds/4f;
             Console.WriteLine("Time: " + time);
             if (recSpeed.Y < 5)
@@ -80,7 +80,7 @@ namespace Project
         {
             recSpeed.Y = 0;
             recSpeed.X = 0;
-            position.Y = MaxY-position.Height;
+            position.Y = MaxY-position.Height-25;
             if ((gameTime.TotalGameTime.Milliseconds / 70) % 2 == 0)
             {
                 barry = Content.Load<Texture2D>("Barry");
@@ -91,12 +91,21 @@ namespace Project
                 barry = Content.Load<Texture2D>("Barry2");
             }
         }
-
+        public override bool isBottom()
+        {
+            if (position.Y >= (MaxY - position.Height-25)) return true;
+            else return false;
+        }
+        public override bool isTop()
+        {
+            if (position.Y <= 25) return true;
+            else return false;
+        }
         public void stop()
         {
             recSpeed.Y = 0;
             recSpeed.X = 0;
-            position.Y = 0;
+            position.Y = 25;
         }
 
         public int getRight()

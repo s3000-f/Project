@@ -24,12 +24,12 @@ namespace Project
             this.MinY = MinY;
             this.position = position;
         }
-        public bool isTop()
+        public virtual bool isTop()
         {
             if (position.Y <= 0) return true;
             else return false;
         }
-        public bool isBottom()
+        public virtual bool isBottom()
         {
             if (position.Y >= (MaxY - position.Height)) return true;
             else return false;
