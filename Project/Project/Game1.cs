@@ -49,7 +49,6 @@ namespace Project
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            meters = 0;
             takenCoins = 0;
             elapsed = 0;
             base.Initialize();
