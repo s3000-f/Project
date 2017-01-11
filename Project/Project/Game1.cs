@@ -17,6 +17,9 @@ namespace Project
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        int takenCoins;
+        int meters;
+        float elapsed;
         Background background;
         Background background2;
         List<Coin> coinList;
@@ -30,6 +33,10 @@ namespace Project
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferMultiSampling = false;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -42,7 +49,9 @@ namespace Project
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            meters = 0;
+            takenCoins = 0;
+            elapsed = 0;
             base.Initialize();
         }
 
@@ -55,6 +64,8 @@ namespace Project
             // Create a new SpriteBatch, which can be used to draw textures.
             //sf=Content.Load<SpriteFont>("arial")
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            sf = Content.Load<SpriteFont>("SpriteFont1");
             barry = new Barry(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(200, 0, 50, 50));
             background = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
             background2 = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(graphics.GraphicsDevice.Viewport.Width, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
@@ -63,7 +74,7 @@ namespace Project
             int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
             coinList = new List<Coin>();
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 100; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
@@ -112,7 +123,17 @@ namespace Project
                 if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
                     || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
                     || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
+                {
                     coin.collision();
+                    takenCoins++;
+                }
+                    
+            }
+            elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if(elapsed>=30)
+            {
+                meters++;
+                elapsed = 0;
             }
 
             Updater(gameTime);
@@ -140,7 +161,7 @@ namespace Project
                 Console.WriteLine("Up Bottom: " + barry.isBottom());
                 barry.walk(gameTime);
             }
-            for (int i = 0; i < 200; i++) coinList[i].move(gameTime);
+            for (int i = 0; i < 1000; i++) coinList[i].move(gameTime);
             background.move();
             background.switchBack();
             background2.move();
@@ -154,10 +175,20 @@ namespace Project
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
             barry.drawBarry(spriteBatch);
+            
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
 
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            spriteBatch.DrawString(sf, takenCoins.ToString(), new Vector2(20, 40), Color.Plum);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            spriteBatch.DrawString(sf, meters.ToString(), new Vector2(20, 10), Color.DarkRed);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
