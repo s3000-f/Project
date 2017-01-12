@@ -12,14 +12,12 @@ using Microsoft.Xna.Framework.Media;
 namespace Project
 {
 
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         int takenCoins;
         int meters;
         float elapsed;
+        int coinStyle;
         Background background;
         Background background2;
         List<Coin> coinList;
@@ -64,23 +62,28 @@ namespace Project
             // Create a new SpriteBatch, which can be used to draw textures.
             //sf=Content.Load<SpriteFont>("arial")
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             sf = Content.Load<SpriteFont>("SpriteFont1");
-            barry = new Barry(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(200, 0, 50, 50));
-            background = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
-            background2 = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(graphics.GraphicsDevice.Viewport.Width, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
+            barry = new Barry(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                new Rectangle(200, 0, 100, 100));
+            background = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
+            background2 = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                new Rectangle(graphics.GraphicsDevice.Viewport.Width, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
             myMusic = Content.Load<SoundEffect>("music");
             soundEngineInstance = myMusic.CreateInstance();
             int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
-            coinList = new List<Coin>();
+            coinStyle = 0;
+            coinList = Creator.createCoin(coinStyle, Content, graphics);
 
-            for (int i = 0; i < 100; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    coinList.Add(new Coin(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, new Rectangle(300 + i * 25, rnd + j * 25, 20, 20)));
-                }
-            }
+            //for (int i = 0; i < 200; i++)
+            //{
+            //    for (int j = 0; j < 5; j++)
+            //    {
+            //        coinList.Add(new Coin(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, 
+            //            new Rectangle(300 + i * 65, rnd + j * 55, 50, 50)));
+            //    }
+            //}
 
 
 
@@ -127,10 +130,10 @@ namespace Project
                     coin.collision();
                     takenCoins++;
                 }
-                    
+
             }
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if(elapsed>=30)
+            if (elapsed >= 30)
             {
                 meters++;
                 elapsed = 0;
@@ -161,7 +164,21 @@ namespace Project
                 Console.WriteLine("Up Bottom: " + barry.isBottom());
                 barry.walk(gameTime);
             }
-            for (int i = 0; i < 1000; i++) coinList[i].move(gameTime);
+            foreach (Coin coin in coinList) coin.move(gameTime);
+            if(coinList[coinList.Count-1].isLeft())
+            {
+                if(coinStyle>3)
+                {
+                    coinStyle = 0;
+                }
+                else
+                {
+                    coinStyle++;
+                }
+               // coinList.RemoveAll();
+                coinList = Creator.createCoin(coinStyle, Content, graphics);
+
+            }
             background.move();
             background.switchBack();
             background2.move();
@@ -174,32 +191,27 @@ namespace Project
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
-            
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
-
-
             spriteBatch.End();
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.DrawString(sf, takenCoins.ToString(), new Vector2(20, 40), Color.Plum);
-
             spriteBatch.End();
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.DrawString(sf, meters.ToString(), new Vector2(20, 10), Color.DarkRed);
-
             spriteBatch.End();
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             foreach (Coin coin in coinList)
             {
                 if (!coin.isHit)
                     coin.drawCoin(spriteBatch);
             }
-
-
-
             spriteBatch.End();
             // TODO: Add your drawing code here
 
