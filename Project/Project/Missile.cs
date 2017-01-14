@@ -14,14 +14,43 @@ namespace Project
     class Missile : Moving
     {
         float elapsed;
-        public bool isHit = false;
+        public bool isHit = false, isLoading = true, isLocked = false;
+        float rotation = 0;
+        const float delay = 50f;
+        int frames = 0;
+        Texture2D missile;
+        Texture2D locked;
+        Texture2D loading;
+        Rectangle sourceRec;
+        ContentManager Content;
+
         public Missile(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
+            this.Content = Content;
+            missile = Content.Load<Texture2D>("missile");
+            locked = Content.Load<Texture2D>("locked");
+            loading = Content.Load<Texture2D>("loading1");
 
         }
-        public void loading(Vector2 barryPos)
+        public void load(Vector2 barryPos,GameTime gameTime)
         {
+            elapsed +=(float) gameTime.ElapsedGameTime.TotalMilliseconds;
+            if(elapsed>300f)
+            {
+                elapsed = 0;
 
+            }
+            else
+            {
+                if(elapsed%300<150)
+                {
+                    loading = Content.Load<Texture2D>("loading1");
+                }
+                else
+                {
+                    loading = Content.Load<Texture2D>("loading2");
+                }
+            }
         }
         public void lockOn()
         {
@@ -33,6 +62,22 @@ namespace Project
         }
         public void collision()
         {
+
+        }
+        public void drawMissile(SpriteBatch spriteBatch)
+        {
+            if (isLoading)
+            {
+                spriteBatch.Draw(loading, position, Color.White);
+            }
+            else if (isLocked)
+            {
+                spriteBatch.Draw(locked, position, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(missile, position, Color.White);
+            }
 
         }
     }
