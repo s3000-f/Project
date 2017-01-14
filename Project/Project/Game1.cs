@@ -169,21 +169,19 @@ namespace Project
                 Console.WriteLine("Up Bottom: " + barry.isBottom());
                 barry.walk(gameTime);
             }
-            foreach (Coin coin in coinLists) coin.move(gameTime);
-            //if (coinLists[coinLists.Count - 1].isLeft())
-            //{
-            //    if (coinStyle > 5)
-            //    {
-            //        coinStyle = 0;
-            //    }
-            //    else
-            //    {
-            //        coinStyle++;
-            //    }
-            //    // coinLists.RemoveAll();
-            //    coinLists = Creator.createCoin(coinStyle, Content, graphics);
+            foreach (Coin coin in coinLists[coinStyle]) coin.move(gameTime);
+            if (coinLists[coinStyle][coinLists[coinStyle].Count - 1].isLeft())
+            {
+                if (coinStyle >= 5)
+                {
+                    coinStyle = 0;
+                }
+                else
+                {
+                    coinStyle++;
+                }
 
-            //}
+            }
             background.move();
             zapper.move(gameTime, true);
             background.switchBack();
@@ -214,7 +212,7 @@ namespace Project
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Coin coin in coinLists)
+            foreach (Coin coin in coinLists[coinStyle])
             {
                 if (!coin.isHit)
                     coin.drawCoin(spriteBatch);

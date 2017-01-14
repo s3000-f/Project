@@ -48,7 +48,7 @@ namespace Project
             }
             sourceRec = new Rectangle(52 * frames, 0, 52, 52);
                 position.X -= 10;
-            if (position.X + MaxX - 5 < 0)
+            if (position.X + MaxX < 0)
                 position.X = MaxX;
         }
         public void collision()
