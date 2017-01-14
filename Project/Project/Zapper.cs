@@ -25,6 +25,7 @@ namespace Project
 
         public Zapper(ContentManager Content,int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
+            
             this.Content = Content;
             this.zapper = Content.Load<Texture2D>("zappers");
         }
@@ -57,7 +58,7 @@ namespace Project
                 {
                     elapsedRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     rotation += (float)Math.PI / 50f;
-                    if (rotation >= 2 * (float)Math.PI) rotation -= 2 * (float)Math.PI;
+                    if (rotation >= (float)Math.PI) rotation -= (float)Math.PI;
                 }
             }
             else rotation = angle;
@@ -67,10 +68,28 @@ namespace Project
         {
             return position.X + position.Width;
         }
-
+        
         public int getBottom()
         {
             return position.Y + position.Height;
+        }
+        public int getLeftH()
+        {
+            return position.X - position.Height;
+        }
+        public int getBottomH()
+        {
+            return position.Y + position.Width;
+        }
+        public float getRotation()
+        {
+            return rotation;
+        }
+        public Color[] getTextureData()
+        {
+            Color[] c = new Color[zapper.Width * zapper.Height];
+            zapper.GetData(c);
+            return c;
         }
         public void drawZapper(SpriteBatch spriteBatch)
         {

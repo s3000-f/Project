@@ -75,7 +75,9 @@
     <Compile Include="Background.cs" />
     <Compile Include="Barry.cs" />
     <Compile Include="Coin.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="Creator.cs" />
+    <Compile Include="Missile.cs" />
     <Compile Include="Moving.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

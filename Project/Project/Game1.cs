@@ -28,6 +28,8 @@ namespace Project
         SoundEffect myMusic;
         SoundEffectInstance soundEngineInstance;
         SpriteFont sf;
+        Color[] barryTextureData;
+        Color[] zapperTextureData;
 
         public Game1()
         {
@@ -53,13 +55,15 @@ namespace Project
 
         protected override void LoadContent()
         {
-            
+
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Loading Zapper
             int rnd2 = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
             zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                new Rectangle(graphics.GraphicsDevice.Viewport.Width-500, rnd2, 97, 263));
+                new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd2, 97, 263));
+            zapperTextureData = zapper.getTextureData();
 
             //Loading Score Font
             sf = Content.Load<SpriteFont>("SpriteFont1");
@@ -67,7 +71,8 @@ namespace Project
             //Loading Barry
             barry = new Barry(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(200, 0, 100, 100));
-            
+            barryTextureData = barry.getTextureData();
+
             // Loading Backgrounds
             background = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
@@ -92,13 +97,27 @@ namespace Project
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
-            
+
+            Matrix barryTransform =
+                Matrix.CreateTranslation(new Vector3(new Vector2(barry.position.X, barry.position.Y), 0.0f));
+            Matrix zapperTransform =
+                    Matrix.CreateTranslation(new Vector3(-new Vector2(zapper.position.Width / 2, zapper.position.Height / 2), 0.0f)) *
+                    // Matrix.CreateScale(block.Scale) *  would go here
+                    Matrix.CreateRotationZ(zapper.getRotation()) *
+                    Matrix.CreateTranslation(new Vector3(new Vector2(zapper.position.X, zapper.position.Y), 0.0f));
+            Rectangle zapperRectangle = Collision.CalculateBoundingRectangle(
+                         new Rectangle(0, 0, zapper.position.Width, zapper.position.Height),
+                         zapperTransform);
+            Rectangle barryRectangle =
+                new Rectangle((int)barry.position.X, (int)barry.position.Y,
+                barry.position.Width, barry.position.Height);
+
             //Play Background Music
             if (soundEngineInstance.State == SoundState.Stopped)
             {
                 soundEngineInstance.Volume = 0.5f;
                 soundEngineInstance.IsLooped = true;
-                soundEngineInstance.Play();
+                // soundEngineInstance.Play();
             }
             else
                 soundEngineInstance.Resume();
@@ -107,14 +126,25 @@ namespace Project
             //Coin Hit Check
             foreach (Coin coin in coinList)
             {
-                if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
-                    || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
-                    || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
+                if (Collision.IntersectPixels(barry.position, barryTextureData,
+                                coin.position, coin.getTextureData()))
                 {
                     coin.collision();
                     takenCoins++;
                 }
 
+            }
+            //Zapper Hit Check
+            if (barryRectangle.Intersects(zapperRectangle))
+            {
+                // Check collision with person
+                if (Collision.IntersectPixels(barryTransform, barry.position.Width,
+                                    barry.position.Height, barryTextureData,
+                                    zapperTransform, zapper.position.Width,
+                                    zapper.position.Height, zapperTextureData))
+                {
+                    this.Exit();
+                }
             }
 
             //Score Calculation
@@ -144,6 +174,7 @@ namespace Project
                 coinList = Creator.createCoin(coinStyle, Content, graphics);
 
             }
+            Console.WriteLine("" + Math.Tan(Math.PI / 2));
 
             //Barry Movement
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && !barry.isTop())
@@ -176,6 +207,8 @@ namespace Project
             background2.switchBack();
         }
 
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -207,5 +240,8 @@ namespace Project
 
             base.Draw(gameTime);
         }
+
+
+
     }
 }

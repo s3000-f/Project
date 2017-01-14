@@ -71,6 +71,12 @@ namespace Project
         {
             return position.Y + position.Height;
         }
+        public Color[] getTextureData()
+        {
+            Color[] c = new Color[coin.Width * coin.Height];
+            coin.GetData(c);
+            return c;
+        }
         public void drawCoin(SpriteBatch spriteBatch)
         {
 

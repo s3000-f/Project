@@ -84,7 +84,6 @@ namespace Project
 
             }
             else
-
             {
                 barry = Content.Load<Texture2D>("Barry2");
             }
@@ -114,6 +113,16 @@ namespace Project
         public int getBottom()
         {
             return position.Y + position.Height;
+        }
+        public Color[] getTextureData()
+        {
+           Color[] c= new Color[barry.Width * barry.Height];
+            barry.GetData(c);
+            return c;
+        }
+        public void die()
+        {
+
         }
         public void drawBarry(SpriteBatch spriteBatch)
         {
