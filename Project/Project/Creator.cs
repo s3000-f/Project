@@ -33,7 +33,7 @@ namespace Project
                     }
                     break;
                 case 1:
-                    int Px = width + 220;
+                    int Px = width + 280;
                     int Py = rnd;
 
                     for (int i = 0; i < 2; i++)
@@ -44,7 +44,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 110;
+                    Px = width + 140;
                     Py = rnd + 110;
 
                     for (int i = 0; i < 2; i++)
@@ -55,7 +55,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 330;
+                    Px = width + 450;
                     Py = rnd + 110;
 
                     for (int i = 0; i < 2; i++)
@@ -77,7 +77,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 220;
+                    Px = width + 280;
                     Py = rnd + 220;
 
                     for (int i = 0; i < 2; i++)
@@ -88,7 +88,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 440;
+                    Px = width + 590;
                     Py = rnd + 220;
 
                     for (int i = 0; i < 2; i++)
@@ -99,7 +99,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 110;
+                    Px = width + 140;
                     Py = rnd + 330;
 
                     for (int i = 0; i < 2; i++)
@@ -110,7 +110,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 330;
+                    Px = width + 450;
                     Py = rnd + 330;
                     for (int i = 0; i < 2; i++)
                     {
@@ -120,7 +120,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 220;
+                    Px = width + 280;
                     Py = rnd + 440;
 
                     for (int i = 0; i < 2; i++)
@@ -196,31 +196,31 @@ namespace Project
                     // End A
                     //Start R1
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+495+k, yy, 50, 50)));
+                                new Rectangle(xx + 495 + k, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+550 + k, yy, 50, 50)));
+                                new Rectangle(xx + 550 + k, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+605+k, yy, 50, 50)));
+                                new Rectangle(xx + 605 + k, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+495 + k, yy+55, 50, 50)));
+                                new Rectangle(xx + 495 + k, yy + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+660 + k, yy+55, 50, 50)));
+                                new Rectangle(xx + 660 + k, yy + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+495 + k, yy+110, 50, 50)));
+                                new Rectangle(xx + 495 + k, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+550 + k, yy+110, 50, 50)));
+                                new Rectangle(xx + 550 + k, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+605 + k, yy+110, 50, 50)));
+                                new Rectangle(xx + 605 + k, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+660 + k, yy+110, 50, 50)));
+                                new Rectangle(xx + 660 + k, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+495 + k, yy+165, 50, 50)));
+                                new Rectangle(xx + 495 + k, yy + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+605 + k, yy+165, 50, 50)));
+                                new Rectangle(xx + 605 + k, yy + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+495 + k, yy+220, 50, 50)));
+                                new Rectangle(xx + 495 + k, yy + 220, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(xx+660 + k, yy+220, 50, 50)));
+                                new Rectangle(xx + 660 + k, yy + 220, 50, 50)));
                     //End R1
                     //Start R2
                     k = 315;
@@ -253,25 +253,25 @@ namespace Project
                     //End R2
                     //Start yy
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1045, yy, 50, 50)));
+                               new Rectangle(xx + 1045, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1210, yy, 50, 50)));
+                               new Rectangle(xx + 1210, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1045, yy+55, 50, 50)));
+                               new Rectangle(xx + 1045, yy + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1210, yy+55, 50, 50)));
+                               new Rectangle(xx + 1210, yy + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1045, yy+110, 50, 50)));
+                               new Rectangle(xx + 1045, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1100, yy+110, 50, 50)));
+                               new Rectangle(xx + 1100, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1155, yy+110, 50, 50)));
+                               new Rectangle(xx + 1155, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1210, yy+110, 50, 50)));
+                               new Rectangle(xx + 1210, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1130, yy+165, 50, 50)));
+                               new Rectangle(xx + 1130, yy + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx+1130, yy+220, 50, 50)));
+                               new Rectangle(xx + 1130, yy + 220, 50, 50)));
                     //End yy
 
                     break;
@@ -279,64 +279,107 @@ namespace Project
                     int x = width;
                     int y = rnd;
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+55, y, 50, 50)));
+                                new Rectangle(x + 55, y, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+110, y, 50, 50)));
+                                new Rectangle(x + 110, y, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+220, y, 50, 50)));
+                                new Rectangle(x + 220, y, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+275, y, 50, 50)));
+                                new Rectangle(x + 275, y, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x, y+55, 50, 50)));
+                                new Rectangle(x, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+55, y+55, 50, 50)));
+                                new Rectangle(x + 55, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+110, y+55, 50, 50)));
+                                new Rectangle(x + 110, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+165, y+55, 50, 50)));
+                                new Rectangle(x + 165, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+220, y+55, 50, 50)));
+                                new Rectangle(x + 220, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+275, y+55, 50, 50)));
+                                new Rectangle(x + 275, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+330, y+55, 50, 50)));
+                                new Rectangle(x + 330, y + 55, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x, y+110, 50, 50)));
+                                new Rectangle(x, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+55, y+110, 50, 50)));
+                                new Rectangle(x + 55, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+110, y+110, 50, 50)));
+                                new Rectangle(x + 110, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+165, y+110, 50, 50)));
+                                new Rectangle(x + 165, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+220, y+110, 50, 50)));
+                                new Rectangle(x + 220, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+275, y+110, 50, 50)));
+                                new Rectangle(x + 275, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+330, y+110, 50, 50)));
+                                new Rectangle(x + 330, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+55, y+165, 50, 50)));
+                                new Rectangle(x + 55, y + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+110, y+165, 50, 50)));
+                                new Rectangle(x + 110, y + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                 new Rectangle(x + 165, y + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+220, y+165, 50, 50)));
+                                new Rectangle(x + 220, y + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+275, y+165, 50, 50)));
+                                new Rectangle(x + 275, y + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+330, y+165, 50, 50)));
+                                new Rectangle(x + 110, y + 220, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+110, y+220, 50, 50)));
+                                new Rectangle(x + 165, y + 220, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+165, y+220, 50, 50)));
+                                new Rectangle(x + 220, y + 220, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+220, y+220, 50, 50)));
-                    coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x+165, y+275, 50, 50)));
+                                new Rectangle(x + 165, y + 275, 50, 50)));
 
                     break;
                 case 4:
+                    int Nx = width;
+                    int Ny = rnd;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + i * 55, Ny + j * 55, 50, 50)));
+                        }
+                    }
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + 165, Ny + 55, 50, 50)));
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + 220, Ny + 55, 50, 50)));
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + 220, Ny + 110, 50, 50)));
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + 275, Ny + 110, 50, 50)));
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + 275, Ny + 165, 50, 50)));
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + 330, Ny + 165, 50, 50)));
+                    Nx += 385;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Nx + i * 55, Ny + j * 55, 50, 50)));
+                        }
+                    }
+                    break;
+                case 5:
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(width, rnd + 55, 50, 50)));
+                    for (int i = 0; i < 13; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(width + 55 + i * 55, rnd + j * 55, 50, 50)));
+                        }
+                    }
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(width + 770, rnd + 55, 50, 50)));
                     break;
             }
 

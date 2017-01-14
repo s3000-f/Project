@@ -49,13 +49,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="coin.png">
-      <Name>coin</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="coinSound.wav">
       <Name>coinSound</Name>
       <Importer>WavImporter</Importer>
@@ -81,6 +74,13 @@
       <Name>SpriteFont1</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="zappers.png">
+      <Name>zappers</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

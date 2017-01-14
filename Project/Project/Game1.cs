@@ -18,9 +18,10 @@ namespace Project
         int meters;
         float elapsed;
         int coinStyle;
+        Zapper zapper;
         Background background;
         Background background2;
-        List<Coin> coinList;
+        List<List<Coin>> coinLists;
         Barry barry;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -50,6 +51,8 @@ namespace Project
             meters = 0;
             takenCoins = 0;
             elapsed = 0;
+            coinLists = new List<List<Coin>>();
+
             base.Initialize();
         }
 
@@ -62,7 +65,9 @@ namespace Project
             // Create a new SpriteBatch, which can be used to draw textures.
             //sf=Content.Load<SpriteFont>("arial")
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            int rnd2 = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
+            zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                new Rectangle(graphics.GraphicsDevice.Viewport.Width-500, rnd2, 97, 263));
             sf = Content.Load<SpriteFont>("SpriteFont1");
             barry = new Barry(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(200, 0, 100, 100));
@@ -73,14 +78,14 @@ namespace Project
             myMusic = Content.Load<SoundEffect>("music");
             soundEngineInstance = myMusic.CreateInstance();
             int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
-            coinStyle = 0;
-            coinList = Creator.createCoin(coinStyle, Content, graphics);
+            for (int i=0;i<6;i++)
+            coinLists.Add(Creator.createCoin(i, Content, graphics));
 
             //for (int i = 0; i < 200; i++)
             //{
             //    for (int j = 0; j < 5; j++)
             //    {
-            //        coinList.Add(new Coin(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, 
+            //        coinLists.Add(new Coin(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, 
             //            new Rectangle(300 + i * 65, rnd + j * 55, 50, 50)));
             //    }
             //}
@@ -121,7 +126,7 @@ namespace Project
             }
             else
                 soundEngineInstance.Resume();
-            foreach (Coin coin in coinList)
+            foreach (Coin coin in coinLists[coinStyle])
             {
                 if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
                     || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
@@ -164,22 +169,23 @@ namespace Project
                 Console.WriteLine("Up Bottom: " + barry.isBottom());
                 barry.walk(gameTime);
             }
-            foreach (Coin coin in coinList) coin.move(gameTime);
-            if(coinList[coinList.Count-1].isLeft())
-            {
-                if(coinStyle>3)
-                {
-                    coinStyle = 0;
-                }
-                else
-                {
-                    coinStyle++;
-                }
-               // coinList.RemoveAll();
-                coinList = Creator.createCoin(coinStyle, Content, graphics);
+            foreach (Coin coin in coinLists) coin.move(gameTime);
+            //if (coinLists[coinLists.Count - 1].isLeft())
+            //{
+            //    if (coinStyle > 5)
+            //    {
+            //        coinStyle = 0;
+            //    }
+            //    else
+            //    {
+            //        coinStyle++;
+            //    }
+            //    // coinLists.RemoveAll();
+            //    coinLists = Creator.createCoin(coinStyle, Content, graphics);
 
-            }
+            //}
             background.move();
+            zapper.move(gameTime, true);
             background.switchBack();
             background2.move();
             background2.switchBack();
@@ -194,6 +200,7 @@ namespace Project
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
+            zapper.drawZapper(spriteBatch);
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
             spriteBatch.End();
@@ -207,7 +214,7 @@ namespace Project
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Coin coin in coinList)
+            foreach (Coin coin in coinLists)
             {
                 if (!coin.isHit)
                     coin.drawCoin(spriteBatch);
