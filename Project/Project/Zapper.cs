@@ -16,7 +16,6 @@ namespace Project
         float elapsed;
         float rotation=0;
         const float delay = 50f;
-        float elapsedRotation;
         int frames = 0;
         public bool isHit = false;
         Texture2D zapper;
@@ -49,16 +48,11 @@ namespace Project
             //Rotation
             if (isRotating)
             {
-                if (elapsedRotation >= 1500)
-                {
-                    elapsedRotation = 0;
-                }
-                else
-                {
+                
                     elapsedRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     rotation += (float)Math.PI / 50f;
                     if (rotation >= 2 * (float)Math.PI) rotation -= 2 * (float)Math.PI;
-                }
+                
             }
             else rotation = angle;
             
