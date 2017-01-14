@@ -14,18 +14,17 @@ namespace Project
     class Zapper : Moving
     {
         float elapsed;
-        float rotation=0;
+        float rotation = 0;
         const float delay = 50f;
-        float elapsedRotation;
         int frames = 0;
         public bool isHit = false;
         Texture2D zapper;
         Rectangle sourceRec;
         ContentManager Content;
 
-        public Zapper(ContentManager Content,int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
+        public Zapper(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
-            
+
             this.Content = Content;
             this.zapper = Content.Load<Texture2D>("zappers");
         }
@@ -42,7 +41,7 @@ namespace Project
                 elapsed = 0;
             }
             sourceRec = new Rectangle(97 * frames, 0, 97, 263);
-            
+
             //Movement
             position.X -= 10;
             if (isLeft()) position.X = MaxX;
@@ -50,25 +49,19 @@ namespace Project
             //Rotation
             if (isRotating)
             {
-                if (elapsedRotation >= 1500)
-                {
-                    elapsedRotation = 0;
-                }
-                else
-                {
-                    elapsedRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                    rotation += (float)Math.PI / 50f;
-                    if (rotation >= (float)Math.PI) rotation -= (float)Math.PI;
-                }
+
+                rotation += (float)Math.PI / 50f;
+                if (rotation >= (float)Math.PI) rotation -= (float)Math.PI;
+
             }
             else rotation = angle;
-            
+
         }
         public int getRight()
         {
             return position.X + position.Width;
         }
-        
+
         public int getBottom()
         {
             return position.Y + position.Height;
