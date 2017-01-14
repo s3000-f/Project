@@ -14,7 +14,6 @@ namespace Project
     class Background : Moving
     {
         Texture2D backGround;
-   
         Vector2 recSpeed;
         Vector2 recAcc;
         ContentManager Content;
@@ -24,8 +23,6 @@ namespace Project
 
             this.Content = content;
             backGround = Content.Load<Texture2D>("back");
-            recSpeed = Vector2.Zero;
-            recAcc = new Vector2(0f, 0.01f);
         }
         public void move()
         {

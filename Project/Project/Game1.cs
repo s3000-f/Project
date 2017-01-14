@@ -21,7 +21,7 @@ namespace Project
         Zapper zapper;
         Background background;
         Background background2;
-        List<List<Coin>> coinLists;
+        List<Coin> coinList;
         Barry barry;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -32,6 +32,7 @@ namespace Project
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //Setting The Game To Full Screen
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferMultiSampling = false;
@@ -39,85 +40,60 @@ namespace Project
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            //  Initialazing Counting Variables
             meters = 0;
             takenCoins = 0;
             elapsed = 0;
-            coinLists = new List<List<Coin>>();
-
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            //sf=Content.Load<SpriteFont>("arial")
+            
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            //Loading Zapper
             int rnd2 = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
             zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width-500, rnd2, 97, 263));
+
+            //Loading Score Font
             sf = Content.Load<SpriteFont>("SpriteFont1");
+
+            //Loading Barry
             barry = new Barry(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(200, 0, 100, 100));
+            
+            // Loading Backgrounds
             background = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
             background2 = new Background(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
+
+            //Loading Music
             myMusic = Content.Load<SoundEffect>("music");
             soundEngineInstance = myMusic.CreateInstance();
+
+            //Loading Coins
             int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
-            for (int i=0;i<6;i++)
-            coinLists.Add(Creator.createCoin(i, Content, graphics));
-
-            //for (int i = 0; i < 200; i++)
-            //{
-            //    for (int j = 0; j < 5; j++)
-            //    {
-            //        coinLists.Add(new Coin(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0, 
-            //            new Rectangle(300 + i * 65, rnd + j * 55, 50, 50)));
-            //    }
-            //}
-
-
-
-
-            // TODO: use this.Content to load your game content here
+            coinStyle = 0;
+            coinList = Creator.createCoin(coinStyle, Content, graphics);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
-            // TODO: Add your update logic here
-
+            
+            //Play Background Music
             if (soundEngineInstance.State == SoundState.Stopped)
             {
                 soundEngineInstance.Volume = 0.5f;
@@ -126,7 +102,10 @@ namespace Project
             }
             else
                 soundEngineInstance.Resume();
-            foreach (Coin coin in coinLists[coinStyle])
+
+
+            //Coin Hit Check
+            foreach (Coin coin in coinList)
             {
                 if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
                     || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
@@ -137,6 +116,8 @@ namespace Project
                 }
 
             }
+
+            //Score Calculation
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsed >= 30)
             {
@@ -149,6 +130,22 @@ namespace Project
         }
         public void Updater(GameTime gameTime)
         {
+            //Changing Coin Pattern
+            if (coinList[coinList.Count - 1].isLeft())
+            {
+                if (coinStyle >= 5)
+                {
+                    coinStyle = 0;
+                }
+                else
+                {
+                    coinStyle++;
+                }
+                coinList = Creator.createCoin(coinStyle, Content, graphics);
+
+            }
+
+            //Barry Movement
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && !barry.isTop())
             {
                 Console.WriteLine("Down !Top: " + barry.isTop());
@@ -169,33 +166,20 @@ namespace Project
                 Console.WriteLine("Up Bottom: " + barry.isBottom());
                 barry.walk(gameTime);
             }
-            foreach (Coin coin in coinLists[coinStyle]) coin.move(gameTime);
-            if (coinLists[coinStyle][coinLists[coinStyle].Count - 1].isLeft())
-            {
-                if (coinStyle >= 5)
-                {
-                    coinStyle = 0;
-                }
-                else
-                {
-                    coinStyle++;
-                }
 
-            }
+            //Movements
+            foreach (Coin coin in coinList) coin.move(gameTime);
             background.move();
             zapper.move(gameTime, true);
             background.switchBack();
             background2.move();
             background2.switchBack();
         }
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
+            //Drawing Barry and Background
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
             zapper.drawZapper(spriteBatch);
@@ -203,22 +187,23 @@ namespace Project
             background2.drawBackground(spriteBatch);
             spriteBatch.End();
 
+            //Taken Coins
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.DrawString(sf, takenCoins.ToString(), new Vector2(20, 40), Color.Plum);
             spriteBatch.End();
-
+            //Passed distance
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.DrawString(sf, meters.ToString(), new Vector2(20, 10), Color.DarkRed);
             spriteBatch.End();
 
+            //Drawing coins
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Coin coin in coinLists[coinStyle])
+            foreach (Coin coin in coinList)
             {
                 if (!coin.isHit)
                     coin.drawCoin(spriteBatch);
             }
             spriteBatch.End();
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }

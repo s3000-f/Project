@@ -21,17 +21,16 @@ namespace Project
         public bool isHit = false;
         Texture2D zapper;
         Rectangle sourceRec;
-        //Vector2 recSpeed;
         ContentManager Content;
 
         public Zapper(ContentManager Content,int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
             this.Content = Content;
-            
             this.zapper = Content.Load<Texture2D>("zappers");
         }
-        public void move(GameTime gameTime, bool isRotating)
+        public void move(GameTime gameTime, bool isRotating, float angle = 0)
         {
+            //Vibration Animation
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsed >= delay)
             {
@@ -42,9 +41,13 @@ namespace Project
                 elapsed = 0;
             }
             sourceRec = new Rectangle(97 * frames, 0, 97, 263);
+            
+            //Movement
             position.X -= 10;
             if (isLeft()) position.X = MaxX;
-            if(isRotating)
+
+            //Rotation
+            if (isRotating)
             {
                 if (elapsedRotation >= 1500)
                 {
@@ -57,6 +60,7 @@ namespace Project
                     if (rotation >= 2 * (float)Math.PI) rotation -= 2 * (float)Math.PI;
                 }
             }
+            else rotation = angle;
             
         }
         public int getRight()
@@ -70,7 +74,6 @@ namespace Project
         }
         public void drawZapper(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(zapper, position, sourceRec, Color.White);
             spriteBatch.Draw(zapper, position, sourceRec, Color.White, rotation, new Vector2(position.Width / 2, position.Height / 2), new SpriteEffects(), 0f);
         }
     }

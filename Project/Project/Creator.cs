@@ -88,17 +88,7 @@ namespace Project
                                 new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
                         }
                     }
-                    Px = width + 590;
-                    Py = rnd + 220;
-
-                    for (int i = 0; i < 2; i++)
-                    {
-                        for (int j = 0; j < 2; j++)
-                        {
-                            coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
-                        }
-                    }
+                    
                     Px = width + 140;
                     Py = rnd + 330;
 
@@ -122,6 +112,17 @@ namespace Project
                     }
                     Px = width + 280;
                     Py = rnd + 440;
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(Px + i * 65, Py + j * 55, 50, 50)));
+                        }
+                    }
+                    Px = width + 590;
+                    Py = rnd + 220;
 
                     for (int i = 0; i < 2; i++)
                     {
@@ -251,15 +252,14 @@ namespace Project
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                 new Rectangle(xx + 660 + k, yy + 220, 50, 50)));
                     //End R2
-                    //Start yy
+                    //Start Y
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                new Rectangle(xx + 1045, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                new Rectangle(xx + 1210, yy, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                new Rectangle(xx + 1045, yy + 55, 50, 50)));
-                    coinList.Add(new Coin(Content, width, height, 0, 0,
-                               new Rectangle(xx + 1210, yy + 55, 50, 50)));
+                   
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                new Rectangle(xx + 1045, yy + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
@@ -272,7 +272,10 @@ namespace Project
                                new Rectangle(xx + 1130, yy + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                new Rectangle(xx + 1130, yy + 220, 50, 50)));
-                    //End yy
+
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                              new Rectangle(xx + 1210, yy + 55, 50, 50)));
+                    //End Y
 
                     break;
                 case 3:
@@ -312,8 +315,7 @@ namespace Project
                                 new Rectangle(x + 220, y + 110, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                 new Rectangle(x + 275, y + 110, 50, 50)));
-                    coinList.Add(new Coin(Content, width, height, 0, 0,
-                                new Rectangle(x + 330, y + 110, 50, 50)));
+                    
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                 new Rectangle(x + 55, y + 165, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
@@ -332,6 +334,9 @@ namespace Project
                                 new Rectangle(x + 220, y + 220, 50, 50)));
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                 new Rectangle(x + 165, y + 275, 50, 50)));
+
+                    coinList.Add(new Coin(Content, width, height, 0, 0,
+                                new Rectangle(x + 330, y + 110, 50, 50)));
 
                     break;
                 case 4:

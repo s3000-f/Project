@@ -23,7 +23,6 @@ namespace Project
         {
 
             this.Content = content;
-            //this.position = new Rectangle(200, 0, 100, 100);
             barry = Content.Load<Texture2D>("Barry");
             recSpeed = Vector2.Zero;
             recAcc = new Vector2(0f, 0.01f);
@@ -32,11 +31,10 @@ namespace Project
         public void jump(GameTime gameTime)
         {
             if (isBottom())
-                position.Y = MaxY - position.Height-25;
+                position.Y = MaxY - position.Height-55;
             if (isTop())
                 position.Y = 26;
             float time = (float)gameTime.ElapsedGameTime.TotalMilliseconds/4f;
-            Console.WriteLine("Time: " + time);
             if(recSpeed.Y>-5)
             {
                 if (recSpeed.Y > 0)
@@ -56,11 +54,10 @@ namespace Project
         public void fall(GameTime gameTime)
         {
             if (isTop())
-                position.Y = 35;
+                position.Y = 55;
             if (isBottom())
-                position.Y = MaxY-position.Height-25;
+                position.Y = MaxY-position.Height-55;
             float time =(float) gameTime.ElapsedGameTime.TotalMilliseconds/4f;
-            Console.WriteLine("Time: " + time);
             if (recSpeed.Y < 5)
             {
                 if (recSpeed.Y < 0)
@@ -80,7 +77,7 @@ namespace Project
         {
             recSpeed.Y = 0;
             recSpeed.X = 0;
-            position.Y = MaxY-position.Height-25;
+            position.Y = MaxY-position.Height-55;
             if ((gameTime.TotalGameTime.Milliseconds / 70) % 2 == 0)
             {
                 barry = Content.Load<Texture2D>("Barry");
@@ -93,19 +90,19 @@ namespace Project
         }
         public override bool isBottom()
         {
-            if (position.Y >= (MaxY - position.Height-25)) return true;
+            if (position.Y >= (MaxY - position.Height-55)) return true;
             else return false;
         }
         public override bool isTop()
         {
-            if (position.Y <= 25) return true;
+            if (position.Y <= 55) return true;
             else return false;
         }
         public void stop()
         {
             recSpeed.Y = 0;
             recSpeed.X = 0;
-            position.Y = 25;
+            position.Y = 55;
         }
 
         public int getRight()

@@ -21,7 +21,6 @@ namespace Project
         Vector2 recSpeed;
         Vector2 recAcc;
         ContentManager Content;
-        //asdasdasd
         SoundEffect collisSound;
         SoundEffectInstance se_Instance;
 
@@ -30,13 +29,11 @@ namespace Project
 
             this.Content = content;
             coin = Content.Load<Texture2D>("coins");
-           // sourceRec = new Rectangle(0, 0, 52, 52);
-            recSpeed = Vector2.Zero;
-            recAcc = new Vector2(0f, 0.01f);
         }
 
         public void move(GameTime gameTime)
         {
+            //Coin Rotation
             elapsed +=(float) gameTime.ElapsedGameTime.TotalMilliseconds;
             if(elapsed>=delay)
             {
@@ -47,17 +44,21 @@ namespace Project
                 elapsed = 0;
             }
             sourceRec = new Rectangle(52 * frames, 0, 52, 52);
+            //Movement
                 position.X -= 10;
             if (position.X + MaxX < 0)
                 position.X = MaxX;
         }
         public void collision()
         {
+            //Collision Sound
             collisSound = Content.Load<SoundEffect>("coinSound");
             se_Instance = collisSound.CreateInstance();
             se_Instance.Volume = 0.75f;
             se_Instance.IsLooped = false;
             se_Instance.Play();
+
+            //Collision Flag
             isHit = true;
 
         }
