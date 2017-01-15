@@ -64,11 +64,28 @@ namespace Project
         }
         public void fire()
         {
-
+            if(isLocked)
+            {
+                position.X += 100;
+                position.Width += 100;
+            }
+            position.X -= 20;
+            if (position.X + position.Width < 0) position.X = 1920;
+            isLocked = false;
+               
         }
         public void collision()
         {
+            isHit = true;
+        }
+        public int getRight()
+        {
+            return position.X + position.Width;
+        }
 
+        public int getBottom()
+        {
+            return position.Y + position.Height;
         }
         public void drawMissile(SpriteBatch spriteBatch)
         {

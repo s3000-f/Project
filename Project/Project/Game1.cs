@@ -94,7 +94,7 @@ namespace Project
             //Loading Missile
             rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
             missile = new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                new Rectangle(graphics.GraphicsDevice.Viewport.Width-100, rnd, 100, 100));
+                new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd, 100, 100));
         }
 
         protected override void UnloadContent()
@@ -134,14 +134,27 @@ namespace Project
             //Coin Hit Check
             foreach (Coin coin in coinList)
             {
-                if (Collision.IntersectPixels(barry.position, barryTextureData,
-                                coin.position, coin.getTextureData()))
+                if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
+                                    || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
+                                    || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
                 {
                     coin.collision();
                     takenCoins++;
                 }
 
             }
+
+            //Missile Hit Check
+            if ((!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
+                                    || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
+                                    || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
+            {
+                missile.collision();
+                this.Exit();
+            }
+
+
+
             //Zapper Hit Check
             if (barryRectangle.Intersects(zapperRectangle))
             {
@@ -209,9 +222,13 @@ namespace Project
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
             background.move();
-            if(elapsedMissile>4000)
+            if (elapsedMissile > 5000)
             {
-                elapsedMissile = 4001;
+                missile.fire();
+            }
+            else if (elapsedMissile > 4000)
+            {
+                elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 missile.lockOn();
             }
             else
@@ -219,7 +236,7 @@ namespace Project
                 elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
             }
-            
+
             zapper.move(gameTime, true);
             background.switchBack();
             background2.move();
@@ -236,7 +253,7 @@ namespace Project
             missile.drawMissile(spriteBatch);
             barry.drawBarry(spriteBatch);
             zapper.drawZapper(spriteBatch);
-            
+
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
             spriteBatch.End();
