@@ -89,8 +89,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="missle.png">
-      <Name>missle</Name>
+    <Compile Include="missile.png">
+      <Name>missile</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

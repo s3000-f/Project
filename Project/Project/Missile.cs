@@ -51,10 +51,16 @@ namespace Project
                     loading = Content.Load<Texture2D>("loading2");
                 }
             }
+            int dY = position.Y - (int)barryPos.Y;
+            if(dY!=0)
+            {
+                position.Y -= (dY / 80);
+            }
         }
         public void lockOn()
         {
-
+            isLoading = false;
+            isLocked = true;
         }
         public void fire()
         {

@@ -17,6 +17,7 @@ namespace Project
         int takenCoins;
         int meters;
         float elapsed;
+        float elapsedMissile;
         int coinStyle;
         Zapper zapper;
         Background background;
@@ -28,6 +29,7 @@ namespace Project
         SoundEffect myMusic;
         SoundEffectInstance soundEngineInstance;
         SpriteFont sf;
+        Missile missile;
         Color[] barryTextureData;
         Color[] zapperTextureData;
 
@@ -87,6 +89,12 @@ namespace Project
             int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
             coinStyle = 0;
             coinList = Creator.createCoin(coinStyle, Content, graphics);
+
+
+            //Loading Missile
+            rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
+            missile = new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                new Rectangle(graphics.GraphicsDevice.Viewport.Width-100, rnd, 100, 100));
         }
 
         protected override void UnloadContent()
@@ -117,7 +125,7 @@ namespace Project
             {
                 soundEngineInstance.Volume = 0.5f;
                 soundEngineInstance.IsLooped = true;
-                // soundEngineInstance.Play();
+                //soundEngineInstance.Play();
             }
             else
                 soundEngineInstance.Resume();
@@ -201,6 +209,17 @@ namespace Project
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
             background.move();
+            if(elapsedMissile>4000)
+            {
+                elapsedMissile = 4001;
+                missile.lockOn();
+            }
+            else
+            {
+                elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
+            }
+            
             zapper.move(gameTime, true);
             background.switchBack();
             background2.move();
@@ -214,8 +233,10 @@ namespace Project
             GraphicsDevice.Clear(Color.Black);
             //Drawing Barry and Background
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            missile.drawMissile(spriteBatch);
             barry.drawBarry(spriteBatch);
             zapper.drawZapper(spriteBatch);
+            
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
             spriteBatch.End();
@@ -224,6 +245,7 @@ namespace Project
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.DrawString(sf, takenCoins.ToString(), new Vector2(20, 40), Color.Plum);
             spriteBatch.End();
+
             //Passed distance
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.DrawString(sf, meters.ToString(), new Vector2(20, 10), Color.DarkRed);
