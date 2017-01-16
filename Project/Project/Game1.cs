@@ -78,7 +78,7 @@ namespace Project
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
 
             //Loading Music
-            myMusic = Content.Load<SoundEffect>("music");
+            myMusic = Content.Load<SoundEffect>("music     ");
             soundEngineInstance = myMusic.CreateInstance();
 
             //Loading Coins
@@ -130,7 +130,7 @@ namespace Project
             {
                 soundEngineInstance.Volume = 0.5f;
                 soundEngineInstance.IsLooped = true;
-                //soundEngineInstance.Play();
+                soundEngineInstance.Play();
             }
             else
                 soundEngineInstance.Resume();
