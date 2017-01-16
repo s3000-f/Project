@@ -15,7 +15,7 @@ namespace Project
     {
         float elapsed;
         public float nextGen = 0;
-        public bool isHit = false, isLoading = true, isLocked = false;
+        public bool isHit = false, isLoading = true, isLocked = false, wasFired=false;
         const float delay = 50f;
         int frame;
         Texture2D missile;
@@ -38,6 +38,12 @@ namespace Project
         }
         public void load(Vector2 barryPos, GameTime gameTime)
         {
+            if (wasFired)
+            {
+                wasFired = false;
+                position.X -= 100;
+            }
+                
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsed > 300f)
             {
@@ -75,7 +81,7 @@ namespace Project
                 position.Width = 187;
                 position.Height = 135;
             }
-            position.X -= 20;
+            position.X -= 30;
             //if (position.X + position.Width < 0) position.X = 1920;
             isLocked = false;
 
@@ -114,12 +120,13 @@ namespace Project
         }
         public void regenerate(GameTime gameTime)
         {
-            position.X = MaxX-100;
+            position.X = MaxX;
             position.Y = new Random().Next(50, MaxY - 170);
             position.Width = 100;
             position.Height = 100;
             isLoading = true;
             isLocked = false;
+            wasFired = true;   
             nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(new Random().Next(4, 10));
 
         }
