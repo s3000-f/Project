@@ -34,7 +34,7 @@ namespace Project
             if (position.Y >= (MaxY - position.Height)) return true;
             else return false;
         }
-        public bool isLeft()
+        public virtual bool isLeft()
         {
             if (position.X <= 0) return true;
             else return false;

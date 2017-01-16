@@ -14,6 +14,7 @@ namespace Project
     class Missile : Moving
     {
         float elapsed;
+        public float nextGen = 0;
         public bool isHit = false, isLoading = true, isLocked = false;
         const float delay = 50f;
         int frame;
@@ -71,13 +72,31 @@ namespace Project
             if (isLocked)
             {
                 position.X += 100;
-                position.Width =   187;
+                position.Width = 187;
                 position.Height = 135;
             }
             position.X -= 20;
-            if (position.X + position.Width < 0) position.X = 1920;
+            //if (position.X + position.Width < 0) position.X = 1920;
             isLocked = false;
 
+        }
+        public void move(GameTime gameTime)
+        {
+            elapsedFire += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsedFire > 50f)
+            {
+                elapsedFire = 0;
+                if (frame >= 6)
+                {
+                    frame = 0;
+
+                }
+                else
+                {
+                    frame++;
+                }
+                srcRect.X = frame * 250;
+            }
         }
         public void collision()
         {
@@ -86,6 +105,23 @@ namespace Project
         public int getRight()
         {
             return position.X + position.Width;
+        }
+        public override bool isLeft()
+        {
+            if (position.X + position.Width < 0)
+                return true;
+            else return false;
+        }
+        public void regenerate(GameTime gameTime)
+        {
+            position.X = MaxX-100;
+            position.Y = new Random().Next(50, MaxY - 170);
+            position.Width = 100;
+            position.Height = 100;
+            isLoading = true;
+            isLocked = false;
+            nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(new Random().Next(4, 10));
+
         }
 
         public int getBottom()
@@ -120,22 +156,8 @@ namespace Project
             }
             else
             {
-                
-                elapsedFire += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (elapsedFire > 50f)
-                {
-                    elapsedFire = 0;
-                    if (frame >= 6)
-                    {
-                        frame = 0;
 
-                    }
-                    else
-                    {
-                        frame++;
-                    }
-                    srcRect.X = frame * 250;
-                }
+
                 spriteBatch.Draw(missile, position, srcRect, Color.White);
             }
 
