@@ -18,6 +18,7 @@ namespace Project
         public bool isHit = false, isLoading = true, isLocked = false, wasFired=false;
         const float delay = 50f;
         int frame;
+        Random rnd;
         Texture2D missile;
         Texture2D locked;
         Texture2D loading;
@@ -30,6 +31,7 @@ namespace Project
         public Missile(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
             this.Content = Content;
+            rnd = new Random();
             srcRect = new Rectangle(0, 0, 250, 180);
             missile = Content.Load<Texture2D>("missile");
             locked = Content.Load<Texture2D>("locked");
@@ -121,13 +123,13 @@ namespace Project
         public void regenerate(GameTime gameTime)
         {
             position.X = MaxX;
-            position.Y = new Random().Next(50, MaxY - 170);
+            position.Y = rnd.Next(50, MaxY - 170);
             position.Width = 100;
             position.Height = 100;
             isLoading = true;
             isLocked = false;
             wasFired = true;   
-            nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(new Random().Next(4, 10));
+            nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(2, 6));
 
         }
 

@@ -14,6 +14,7 @@ namespace Project
     class Zapper : Moving
     {
         bool isRotating;
+        Random rnd;
         public float nextGen = 0;
         float elapsed;
         float rotation = 0;
@@ -26,7 +27,7 @@ namespace Project
 
         public Zapper(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
-
+            rnd=new Random();
             this.Content = Content;
             this.zapper = Content.Load<Texture2D>("zappers");
         }
@@ -71,8 +72,8 @@ namespace Project
         public void regenerate(GameTime gameTime)
         {
             position.X = MaxX+200;
-            position.Y = new Random().Next(50, MaxY - 170);
-            int i=new Random().Next(0,3);
+            position.Y = rnd.Next(50, MaxY - 170);
+            int i=rnd.Next(0,3);
             switch(i)
             {
                 case 0:
@@ -85,10 +86,10 @@ namespace Project
                     rotation = (float)Math.PI / 2f;
                     break;
             }
-            i = (new Random().Next(0, 2));
+            i = (rnd.Next(0, 2));
             if (i == 1) isRotating = true;
             else isRotating = false;
-            nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(new Random().Next(4, 10));
+            nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(1, 5));
 
         }
         public Color[] getTextureData()

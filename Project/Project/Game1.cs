@@ -15,13 +15,14 @@ namespace Project
     public class Game1 : Microsoft.Xna.Framework.Game
     {
 
-        float elapsedMissile;
-        float elapsedZapper;
+        List<float> elapsedMissile;
+        // List<float> elapsedZapper;
         bool isPause = false;
         int coinStyle;
         int gameMode;
         Score score;
-        Zapper zapper;
+        Random rnd;
+        //Zapper zapper;
         Background background;
         Background background2;
         List<Coin> coinList;
@@ -31,7 +32,8 @@ namespace Project
         SoundEffect myMusic;
         SoundEffectInstance soundEngineInstance;
         SpriteFont sf;
-        Missile missile;
+        List<Missile> missileList;
+        List<Zapper> zapperList;
         Color[] barryTextureData;
         Color[] zapperTextureData;
         Texture2D pause;
@@ -43,8 +45,9 @@ namespace Project
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
+            rnd = new Random();
         }
 
 
@@ -60,10 +63,16 @@ namespace Project
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Loading Zapper
-            int rnd2 = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
-            zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd2, 97, 263));
-            zapperTextureData = zapper.getTextureData();
+            zapperList = new List<Zapper>();
+            for (int i = 0; i < 6; i++)
+            {
+                int rnd2 = 0;
+                for (int j = 0; j < 3; j++) rnd2 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
+                Zapper zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd2, 97, 263));
+                zapperTextureData = zapper.getTextureData();
+                zapperList.Add(zapper);
+            }
 
             //Loading Score Font
             sf = Content.Load<SpriteFont>("SpriteFont1");
@@ -86,15 +95,21 @@ namespace Project
             soundEngineInstance.IsLooped = true;
 
             //Loading Coins
-            int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
+            int rnd3 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
             coinStyle = 0;
             coinList = Creator.createCoin(coinStyle, Content, graphics);
 
 
             //Loading Missile
-            rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
-            missile = new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd, 100, 100));
+            elapsedMissile = new List<float>();
+            missileList = new List<Missile>();
+            for (int i = 0; i < 6; i++)
+            {
+                rnd3 = rnd.Next(50, graphics.GraphicsDevice.Viewport.Height - 100);
+                missileList.Add(new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd3, 100, 100)));
+                elapsedMissile.Add(0f);
+            }
             //Load Score
             score = new Score(Content);
 
@@ -112,7 +127,7 @@ namespace Project
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
-            
+
             if (gameMode == 0)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
@@ -133,7 +148,7 @@ namespace Project
                 }
                 else
                     soundEngineInstance.Resume();
-                
+
 
             }
             else if (gameMode == 2)
@@ -153,21 +168,58 @@ namespace Project
         }
         public void Updater(GameTime gameTime)
         {
+            if(((float)gameTime.TotalGameTime.TotalSeconds>30f && (float)gameTime.TotalGameTime.TotalSeconds < 30.01f) 
+                || ((float)gameTime.TotalGameTime.TotalSeconds > 60f && (float)gameTime.TotalGameTime.TotalSeconds < 60.01f)
+                || ((float)gameTime.TotalGameTime.TotalSeconds > 90f && (float)gameTime.TotalGameTime.TotalSeconds < 90.01f))
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    int rnd3 = rnd.Next(50, graphics.GraphicsDevice.Viewport.Height - 100);
+                    missileList.Add(new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd3, 100, 100)));
+                    elapsedMissile.Add(0f);
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    int rnd2 = 0;
+                    for (int j = 0; j < 3; j++) rnd2 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
+                    Zapper zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd2, 97, 263));
+                    zapperTextureData = zapper.getTextureData();
+                    zapperList.Add(zapper);
+                }
+            }
             Matrix barryTransform =
                 Matrix.CreateTranslation(new Vector3(new Vector2(barry.position.X, barry.position.Y), 0.0f));
-            Matrix zapperTransform =
-                    Matrix.CreateTranslation(new Vector3(-new Vector2(zapper.position.Width / 2, zapper.position.Height / 2), 0.0f)) *
-                    // Matrix.CreateScale(block.Scale) *  would go here
-                    Matrix.CreateRotationZ(zapper.getRotation()) *
-                    Matrix.CreateTranslation(new Vector3(new Vector2(zapper.position.X, zapper.position.Y), 0.0f));
-            Rectangle zapperRectangle = Collision.CalculateBoundingRectangle(
-                         new Rectangle(0, 0, zapper.position.Width, zapper.position.Height),
-                         zapperTransform);
+
             Rectangle barryRectangle =
                 new Rectangle((int)barry.position.X, (int)barry.position.Y,
                 barry.position.Width, barry.position.Height);
 
-            
+            foreach (Zapper zapper in zapperList)
+            {
+                Matrix zapperTransform =
+                   Matrix.CreateTranslation(new Vector3(-new Vector2(zapper.position.Width / 2, zapper.position.Height / 2), 0.0f)) *
+                   // Matrix.CreateScale(block.Scale) *  would go here
+                   Matrix.CreateRotationZ(zapper.getRotation()) *
+                   Matrix.CreateTranslation(new Vector3(new Vector2(zapper.position.X, zapper.position.Y), 0.0f));
+                Rectangle zapperRectangle = Collision.CalculateBoundingRectangle(
+                             new Rectangle(0, 0, zapper.position.Width, zapper.position.Height),
+                             zapperTransform);
+                //Zapper Hit Check
+                if (barryRectangle.Intersects(zapperRectangle))
+                {
+                    // Check collision with person
+                    if (Collision.IntersectPixels(barryTransform, barry.position.Width,
+                                        barry.position.Height, barryTextureData,
+                                        zapperTransform, zapper.position.Width,
+                                        zapper.position.Height, zapperTextureData))
+                    {
+                        score.writeHighScore();
+                        this.Exit();
+                    }
+                }
+            }
 
 
             //Coin Hit Check
@@ -184,30 +236,20 @@ namespace Project
             }
 
             //Missile Hit Check
-            if ((!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
+            foreach (Missile missile in missileList)
+            {
+                if ((!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
                                     || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
                                     || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
-            {
-                missile.collision();
-                score.writeHighScore();
-                this.Exit();
-            }
-
-
-
-            //Zapper Hit Check
-            if (barryRectangle.Intersects(zapperRectangle))
-            {
-                // Check collision with person
-                if (Collision.IntersectPixels(barryTransform, barry.position.Width,
-                                    barry.position.Height, barryTextureData,
-                                    zapperTransform, zapper.position.Width,
-                                    zapper.position.Height, zapperTextureData))
                 {
+                    missile.collision();
                     score.writeHighScore();
                     this.Exit();
                 }
+
             }
+
+
 
             //Score Calculation
             score.run(gameTime);
@@ -225,7 +267,6 @@ namespace Project
                 coinList = Creator.createCoin(coinStyle, Content, graphics);
 
             }
-            Console.WriteLine("" + Math.Tan(Math.PI / 2));
 
             //Barry Movement
             barry.physics(gameTime);
@@ -233,36 +274,43 @@ namespace Project
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
             background.move();
-            missile.move(gameTime);
-            if (missile.nextGen < gameTime.TotalGameTime.TotalSeconds && !missile.isLeft())
+            foreach (Missile missile in missileList)
             {
-                if (elapsedMissile > 5000)
+                missile.move(gameTime);
+                if (missile.nextGen < gameTime.TotalGameTime.TotalSeconds && !missile.isLeft())
                 {
-                    missile.fire();
+                    if (elapsedMissile[missileList.IndexOf(missile)] > 5000)
+                    {
+                        missile.fire();
+                    }
+                    else if (elapsedMissile[missileList.IndexOf(missile)] > 4000)
+                    {
+                        elapsedMissile[missileList.IndexOf(missile)] += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        missile.lockOn(gameTime);
+                    }
+                    else
+                    {
+                        elapsedMissile[missileList.IndexOf(missile)] += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
+                    }
                 }
-                else if (elapsedMissile > 4000)
+                else if (missile.isLeft())
                 {
-                    elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                    missile.lockOn(gameTime);
-                }
-                else
-                {
-                    elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                    missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
+                    missile.regenerate(gameTime);
+                    //     Console.WriteLine("-->"+missileList.IndexOf(missile));
+                    elapsedMissile[missileList.IndexOf(missile)] = 0;
                 }
             }
-            else if(missile.isLeft())
+            foreach (Zapper zapper in zapperList)
             {
-                missile.regenerate(gameTime);
-                elapsedMissile = 0;
-            }
-            if (zapper.nextGen < gameTime.TotalGameTime.TotalSeconds && !zapper.isLeft())
-            {
-                zapper.move(gameTime);
-            }
-            if (zapper.isLeft())
-            {
-                zapper.regenerate(gameTime);
+                if (zapper.nextGen < gameTime.TotalGameTime.TotalSeconds && !zapper.isLeft())
+                {
+                    zapper.move(gameTime);
+                }
+                if (zapper.isLeft())
+                {
+                    zapper.regenerate(gameTime);
+                }
             }
 
             background.switchBack();
@@ -277,12 +325,19 @@ namespace Project
             GraphicsDevice.Clear(Color.Black);
             //Drawing Barry and Background
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            missile.drawMissile(spriteBatch);
             barry.drawBarry(spriteBatch);
-            zapper.drawZapper(spriteBatch);
+
 
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            foreach (Zapper zapper in zapperList)
+                zapper.drawZapper(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            foreach (Missile missile in missileList)
+                missile.drawMissile(spriteBatch);
             spriteBatch.End();
 
             //Taken Coins
@@ -304,7 +359,7 @@ namespace Project
             }
             spriteBatch.End();
 
-            if(isPause)
+            if (isPause)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 spriteBatch.Draw(pause, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);

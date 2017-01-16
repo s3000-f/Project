@@ -39,7 +39,7 @@ namespace Project
                 {
                     bestScore = 0;
                     allCoins = 0;
-                }
+                } 
                     
             }
             else
@@ -75,11 +75,11 @@ namespace Project
         {
             if (meters > bestScore)
             {
-                File.writeFile("" + meters + "," + allCoins+takenCoins);
+                File.writeFile("" + meters + "," + (allCoins+takenCoins));
             }
             else
             {
-                File.writeFile("" + bestScore + "," + allCoins + takenCoins);
+                File.writeFile("" + bestScore + "," + (allCoins + takenCoins));
             }
         }
         public int getAllCoins()
