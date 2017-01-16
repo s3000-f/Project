@@ -16,32 +16,36 @@ namespace Project
         float elapsed;
         public bool isHit = false, isLoading = true, isLocked = false;
         const float delay = 50f;
+        int frame;
         Texture2D missile;
         Texture2D locked;
         Texture2D loading;
-        float elapsedLock=0;
+        float elapsedLock = 0;
+        float elapsedFire = 0;
         GameTime gameTime;
+        Rectangle srcRect;
         ContentManager Content;
 
         public Missile(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
             this.Content = Content;
+            srcRect = new Rectangle(0, 0, 250, 180);
             missile = Content.Load<Texture2D>("missile");
             locked = Content.Load<Texture2D>("locked");
             loading = Content.Load<Texture2D>("loading1");
 
         }
-        public void load(Vector2 barryPos,GameTime gameTime)
+        public void load(Vector2 barryPos, GameTime gameTime)
         {
-            elapsed +=(float) gameTime.ElapsedGameTime.TotalMilliseconds;
-            if(elapsed>300f)
+            elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsed > 300f)
             {
                 elapsed = 0;
 
             }
             else
             {
-                if(elapsed%300<150)
+                if (elapsed % 300 < 150)
                 {
                     loading = Content.Load<Texture2D>("loading1");
                 }
@@ -51,7 +55,7 @@ namespace Project
                 }
             }
             int dY = position.Y - (int)barryPos.Y;
-            if(dY!=0)
+            if (dY != 0)
             {
                 position.Y -= (dY / 80);
             }
@@ -64,15 +68,16 @@ namespace Project
         }
         public void fire()
         {
-            if(isLocked)
+            if (isLocked)
             {
                 position.X += 100;
-                position.Width += 100;
+                position.Width =   187;
+                position.Height = 135;
             }
             position.X -= 20;
             if (position.X + position.Width < 0) position.X = 1920;
             isLocked = false;
-               
+
         }
         public void collision()
         {
@@ -112,11 +117,26 @@ namespace Project
                         spriteBatch.Draw(locked, position, Color.PaleVioletRed);
                     }
                 }
-                
             }
             else
             {
-                spriteBatch.Draw(missile, position, Color.White);
+                
+                elapsedFire += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (elapsedFire > 50f)
+                {
+                    elapsedFire = 0;
+                    if (frame >= 6)
+                    {
+                        frame = 0;
+
+                    }
+                    else
+                    {
+                        frame++;
+                    }
+                    srcRect.X = frame * 250;
+                }
+                spriteBatch.Draw(missile, position, srcRect, Color.White);
             }
 
         }

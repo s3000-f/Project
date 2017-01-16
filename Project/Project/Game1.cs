@@ -14,12 +14,10 @@ namespace Project
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        int takenCoins;
-        int meters;
-        float elapsed;
+        
         float elapsedMissile;
         int coinStyle;
-        int bestScore;
+        Score score;
         Zapper zapper;
         Background background;
         Background background2;
@@ -48,10 +46,7 @@ namespace Project
 
         protected override void Initialize()
         {
-            //  Initialazing Counting Variables
-            meters = 0;
-            takenCoins = 0;
-            elapsed = 0;
+
             base.Initialize();
         }
 
@@ -96,16 +91,8 @@ namespace Project
             rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
             missile = new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd, 100, 100));
-            //Get Best Score
-            if ((File.readFile() != null))
-            {
-                List<string[]> scores = File.readFile();
-                if (scores.Count != 0)
-                    bestScore = Int32.Parse(scores[scores.Count - 1][0]);
-                else
-                    bestScore = 0;
-            }
-            else bestScore = 0;
+            //Load Score
+            score = new Score(Content);
                 
         }
 
@@ -118,6 +105,12 @@ namespace Project
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
 
+
+            Updater(gameTime);
+            base.Update(gameTime);
+        }
+        public void Updater(GameTime gameTime)
+        {
             Matrix barryTransform =
                 Matrix.CreateTranslation(new Vector3(new Vector2(barry.position.X, barry.position.Y), 0.0f));
             Matrix zapperTransform =
@@ -151,7 +144,7 @@ namespace Project
                                     || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
                 {
                     coin.collision();
-                    takenCoins++;
+                    score.gotCoins();
                 }
 
             }
@@ -162,10 +155,11 @@ namespace Project
                                     || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
             {
                 missile.collision();
-                if (meters > bestScore)
-                {
-                    File.writeFile("" + meters + "," + takenCoins);
-                }
+                score.writeHighScore();
+                //if (meters > bestScore)
+                //{
+                //    File.writeFile("" + meters + "," + takenCoins);
+                //}
                 this.Exit();
             }
 
@@ -180,27 +174,17 @@ namespace Project
                                     zapperTransform, zapper.position.Width,
                                     zapper.position.Height, zapperTextureData))
                 {
-                    if(meters>bestScore)
-                    {
-                        File.writeFile("" + meters + "," + takenCoins);
-                    }
+                    score.writeHighScore();
+                    //if(meters>bestScore)
+                    //{
+                    //    File.writeFile("" + meters + "," + takenCoins);
+                    //}
                     this.Exit();
                 }
             }
 
             //Score Calculation
-            elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsed >= 60)
-            {
-                meters++;
-                elapsed = 0;
-            }
-
-            Updater(gameTime);
-            base.Update(gameTime);
-        }
-        public void Updater(GameTime gameTime)
-        {
+            score.run(gameTime);
             //Changing Coin Pattern
             if (coinList[coinList.Count - 1].isLeft())
             {
@@ -261,12 +245,12 @@ namespace Project
 
             //Taken Coins
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            spriteBatch.DrawString(sf, takenCoins.ToString(), new Vector2(20, 40), Color.Plum);
+            score.drawCoinScore(spriteBatch);
             spriteBatch.End();
 
-            //Passed distance
+            ////Passed distance
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            spriteBatch.DrawString(sf, meters.ToString(), new Vector2(20, 10), Color.DarkRed);
+            score.drawScore(spriteBatch);
             spriteBatch.End();
 
             //Drawing coins
