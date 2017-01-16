@@ -16,6 +16,7 @@ namespace Project
     {
 
         float elapsedMissile;
+        bool isPause = false;
         int coinStyle;
         int gameMode;
         Score score;
@@ -32,6 +33,7 @@ namespace Project
         Missile missile;
         Color[] barryTextureData;
         Color[] zapperTextureData;
+        Texture2D pause;
 
         public Game1()
         {
@@ -81,6 +83,8 @@ namespace Project
             //Loading Music
             myMusic = Content.Load<SoundEffect>("music");
             soundEngineInstance = myMusic.CreateInstance();
+            soundEngineInstance.Volume = 0.5f;
+            soundEngineInstance.IsLooped = true;
 
             //Loading Coins
             int rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
@@ -95,6 +99,9 @@ namespace Project
             //Load Score
             score = new Score(Content);
 
+            //Load Pause Screen
+            pause = Content.Load<Texture2D>("pause");
+
         }
 
         protected override void UnloadContent()
@@ -102,9 +109,11 @@ namespace Project
 
         }
 
+        KeyboardState oldState;
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
+            
             if (gameMode == 0)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
@@ -112,13 +121,34 @@ namespace Project
             else if (gameMode == 1)
             {
                 Updater(gameTime);
-                if (Keyboard.GetState().IsKeyDown(Keys.P)) gameMode = 2;
+                if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
+                {
+                    gameMode = 2;
+                    isPause = true;
+                }
+                //Play Background Music
+                if (soundEngineInstance.State == SoundState.Stopped)
+                {
+
+                    soundEngineInstance.Play();
+                }
+                else
+                    soundEngineInstance.Resume();
+                
+
             }
             else if (gameMode == 2)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.P)) gameMode = 1; ;
-            }
+                if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
+                {
+                    gameMode = 1;
+                    isPause = false;
+                }
+                //Stop Background Music
+                soundEngineInstance.Pause();
 
+            }
+            oldState = Keyboard.GetState();
 
             base.Update(gameTime);
         }
@@ -138,15 +168,7 @@ namespace Project
                 new Rectangle((int)barry.position.X, (int)barry.position.Y,
                 barry.position.Width, barry.position.Height);
 
-            //Play Background Music
-            if (soundEngineInstance.State == SoundState.Stopped)
-            {
-                soundEngineInstance.Volume = 0.5f;
-                soundEngineInstance.IsLooped = true;
-                soundEngineInstance.Play();
-            }
-            else
-                soundEngineInstance.Resume();
+            
 
 
             //Coin Hit Check
@@ -282,6 +304,15 @@ namespace Project
                     coin.drawCoin(spriteBatch);
             }
             spriteBatch.End();
+
+            if(isPause)
+            {
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                spriteBatch.Draw(pause, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>("pauseAlpha"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.End();
+            }
+
 
             base.Draw(gameTime);
         }

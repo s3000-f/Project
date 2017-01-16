@@ -14,6 +14,7 @@ namespace Project
         float elapsed;
         int takenCoins;
         int meters;
+        int allCoins;
         int bestScore;
         List<Texture2D> digits;
         List<Texture2D> digitsCoin;
@@ -30,11 +31,22 @@ namespace Project
             {
                 List<string[]> scores = File.readFile();
                 if (scores.Count != 0)
+                {
                     bestScore = Int32.Parse(scores[scores.Count - 1][0]);
+                    allCoins = Int32.Parse(scores[scores.Count - 1][1]);
+                }
                 else
+                {
                     bestScore = 0;
+                    allCoins = 0;
+                }
+                    
             }
-            else bestScore = 0;
+            else
+            {
+                bestScore = 0;
+                allCoins = 0;
+            }
             digits = new List<Texture2D>();
             for(int i=0;i<10;i++)
             {
@@ -63,8 +75,16 @@ namespace Project
         {
             if (meters > bestScore)
             {
-                File.writeFile("" + meters + "," + takenCoins);
+                File.writeFile("" + meters + "," + allCoins+takenCoins);
             }
+            else
+            {
+                File.writeFile("" + bestScore + "," + allCoins + takenCoins);
+            }
+        }
+        public int getAllCoins()
+        {
+            return allCoins;
         }
         public void drawScore(SpriteBatch spriteBatch)
         {
