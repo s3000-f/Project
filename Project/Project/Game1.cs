@@ -16,6 +16,7 @@ namespace Project
     {
 
         float elapsedMissile;
+        float elapsedZapper;
         bool isPause = false;
         int coinStyle;
         int gameMode;
@@ -49,14 +50,12 @@ namespace Project
 
         protected override void Initialize()
         {
-
             base.Initialize();
         }
 
 
         protected override void LoadContent()
         {
-
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -191,10 +190,6 @@ namespace Project
             {
                 missile.collision();
                 score.writeHighScore();
-                //if (meters > bestScore)
-                //{
-                //    File.writeFile("" + meters + "," + takenCoins);
-                //}
                 this.Exit();
             }
 
@@ -210,10 +205,6 @@ namespace Project
                                     zapper.position.Height, zapperTextureData))
                 {
                     score.writeHighScore();
-                    //if(meters>bestScore)
-                    //{
-                    //    File.writeFile("" + meters + "," + takenCoins);
-                    //}
                     this.Exit();
                 }
             }
@@ -265,7 +256,15 @@ namespace Project
                 missile.regenerate(gameTime);
                 elapsedMissile = 0;
             }
-            zapper.move(gameTime, true);
+            if (zapper.nextGen < gameTime.TotalGameTime.TotalSeconds && !zapper.isLeft())
+            {
+                zapper.move(gameTime);
+            }
+            if (zapper.isLeft())
+            {
+                zapper.regenerate(gameTime);
+            }
+
             background.switchBack();
             background2.move();
             background2.switchBack();

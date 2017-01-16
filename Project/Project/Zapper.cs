@@ -13,6 +13,8 @@ namespace Project
 {
     class Zapper : Moving
     {
+        bool isRotating;
+        public float nextGen = 0;
         float elapsed;
         float rotation = 0;
         const float delay = 50f;
@@ -28,7 +30,7 @@ namespace Project
             this.Content = Content;
             this.zapper = Content.Load<Texture2D>("zappers");
         }
-        public void move(GameTime gameTime, bool isRotating, float angle = 0)
+        public void move(GameTime gameTime)
         {
             //Vibration Animation
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -44,7 +46,6 @@ namespace Project
 
             //Movement
             position.X -= 10;
-            if (isLeft()) position.X = MaxX;
 
             //Rotation
             if (isRotating)
@@ -54,29 +55,41 @@ namespace Project
                 if (rotation >= (float)Math.PI) rotation -= (float)Math.PI;
 
             }
-            else rotation = angle;
 
         }
-        public int getRight()
+        public override bool isLeft()
         {
-            return position.X + position.Width;
-        }
+            if (position.X + position.Width < 0)
+                return true;
+            else return false;
 
-        public int getBottom()
-        {
-            return position.Y + position.Height;
-        }
-        public int getLeftH()
-        {
-            return position.X - position.Height;
-        }
-        public int getBottomH()
-        {
-            return position.Y + position.Width;
         }
         public float getRotation()
         {
             return rotation;
+        }
+        public void regenerate(GameTime gameTime)
+        {
+            position.X = MaxX+200;
+            position.Y = new Random().Next(50, MaxY - 170);
+            int i=new Random().Next(0,3);
+            switch(i)
+            {
+                case 0:
+                    rotation = 0;
+                    break;
+                case 1:
+                    rotation = (float)Math.PI / 4f;
+                    break;
+                case 2:
+                    rotation = (float)Math.PI / 2f;
+                    break;
+            }
+            i = (new Random().Next(0, 2));
+            if (i == 1) isRotating = true;
+            else isRotating = false;
+            nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(new Random().Next(4, 10));
+
         }
         public Color[] getTextureData()
         {
