@@ -14,9 +14,10 @@ namespace Project
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        
+
         float elapsedMissile;
         int coinStyle;
+        int gameMode;
         Score score;
         Zapper zapper;
         Background background;
@@ -93,7 +94,7 @@ namespace Project
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd, 100, 100));
             //Load Score
             score = new Score(Content);
-                
+
         }
 
         protected override void UnloadContent()
@@ -104,9 +105,21 @@ namespace Project
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
+            if (gameMode == 0)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
+            }
+            else if (gameMode == 1)
+            {
+                Updater(gameTime);
+                if (Keyboard.GetState().IsKeyDown(Keys.P)) gameMode = 2;
+            }
+            else if (gameMode == 2)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.P)) gameMode = 1; ;
+            }
 
 
-            Updater(gameTime);
             base.Update(gameTime);
         }
         public void Updater(GameTime gameTime)
@@ -207,21 +220,29 @@ namespace Project
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
             background.move();
-            if (elapsedMissile > 5000)
+            missile.move(gameTime);
+            if (missile.nextGen < gameTime.TotalGameTime.TotalSeconds && !missile.isLeft())
             {
-                missile.fire();
+                if (elapsedMissile > 5000)
+                {
+                    missile.fire();
+                }
+                else if (elapsedMissile > 4000)
+                {
+                    elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    missile.lockOn(gameTime);
+                }
+                else
+                {
+                    elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
+                }
             }
-            else if (elapsedMissile > 4000)
+            else if(missile.isLeft())
             {
-                elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                missile.lockOn(gameTime);
+                missile.regenerate(gameTime);
+                elapsedMissile = 0;
             }
-            else
-            {
-                elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
-            }
-
             zapper.move(gameTime, true);
             background.switchBack();
             background2.move();

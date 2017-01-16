@@ -37,22 +37,22 @@ namespace Project
         public void physics(GameTime gameTime)
         {
 
-            if (position.Y >= 50 && position.Y <= MaxY-170) // this big if is for when exactly shetab and gravity should occur
+            if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
             {
-                if (position.Y == MaxY-170) // this is for animating ground barry
+                if (position.Y == MaxY - 170) // this is for animating ground barry
                     walk(gameTime);
-                if (Keyboard.GetState().IsKeyDown(Keys.Space)) // this is for shetab roo be bala , it should the key is down 
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed) // this is for shetab roo be bala , it should the key is down 
                 {
                     // this is for animating air barry
-                        jump();
+                    jump();
                     if (recSpeed.Y < 15) // this is the speed cap, if speed is lower than 15, the gravity will increse the speed
                         recSpeed.Y += recAcc.Y;
 
                 }
-                if (Keyboard.GetState().IsKeyUp(Keys.Space) && position.Y != MaxY - 170) // this is for gravity, it should happen when the key isnt pressed
+                if (Keyboard.GetState().IsKeyUp(Keys.Space) && Keyboard.GetState().IsKeyUp(Keys.Up) && Mouse.GetState().LeftButton == ButtonState.Released && position.Y != MaxY - 170) // this is for gravity, it should happen when the key isnt pressed
                 {
-                     //this is for animating air barry
-                        fall();
+                    //this is for animating air barry
+                    fall();
                     if (recSpeed.Y > -10) // this is the seed cap 
                         recSpeed.Y -= gravity.Y;
 
@@ -64,9 +64,9 @@ namespace Project
                 position.Y = 50;
                 recSpeed.Y = 0;
             }
-            else if (position.Y > MaxY-170) // if barry hits the ground, this will make his speed 0 and adjust it's positionition
+            else if (position.Y > MaxY - 170) // if barry hits the ground, this will make his speed 0 and adjust it's positionition
             {
-                position.Y = MaxY-170;
+                position.Y = MaxY - 170;
                 recSpeed.Y = 0;
             }
         }
@@ -92,7 +92,7 @@ namespace Project
                 }
             }
         }
-        
+
         public void jump()
         {
             barry = Content.Load<Texture2D>("barry_air");
