@@ -19,6 +19,7 @@ namespace Project
         float elapsed;
         float elapsedMissile;
         int coinStyle;
+        int bestScore;
         Zapper zapper;
         Background background;
         Background background2;
@@ -40,7 +41,7 @@ namespace Project
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             Content.RootDirectory = "Content";
         }
 
@@ -95,6 +96,17 @@ namespace Project
             rnd = new Random().Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
             missile = new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd, 100, 100));
+            //Get Best Score
+            if ((File.readFile() != null))
+            {
+                List<string[]> scores = File.readFile();
+                if (scores.Count != 0)
+                    bestScore = Int32.Parse(scores[scores.Count - 1][0]);
+                else
+                    bestScore = 0;
+            }
+            else bestScore = 0;
+                
         }
 
         protected override void UnloadContent()
@@ -150,6 +162,10 @@ namespace Project
                                     || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
             {
                 missile.collision();
+                if (meters > bestScore)
+                {
+                    File.writeFile("" + meters + "," + takenCoins);
+                }
                 this.Exit();
             }
 
@@ -164,13 +180,17 @@ namespace Project
                                     zapperTransform, zapper.position.Width,
                                     zapper.position.Height, zapperTextureData))
                 {
+                    if(meters>bestScore)
+                    {
+                        File.writeFile("" + meters + "," + takenCoins);
+                    }
                     this.Exit();
                 }
             }
 
             //Score Calculation
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsed >= 30)
+            if (elapsed >= 60)
             {
                 meters++;
                 elapsed = 0;
@@ -198,26 +218,7 @@ namespace Project
             Console.WriteLine("" + Math.Tan(Math.PI / 2));
 
             //Barry Movement
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !barry.isTop())
-            {
-                Console.WriteLine("Down !Top: " + barry.isTop());
-                barry.jump(gameTime);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Space) && barry.isTop())
-            {
-                Console.WriteLine("Down Top: " + barry.isTop());
-                barry.stop();
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Space) && !barry.isBottom())
-            {
-                Console.WriteLine("Up !Bottom: " + barry.isBottom());
-                barry.fall(gameTime);
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Space) && barry.isBottom())
-            {
-                Console.WriteLine("Up Bottom: " + barry.isBottom());
-                barry.walk(gameTime);
-            }
+            barry.physics(gameTime);
 
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
@@ -229,7 +230,7 @@ namespace Project
             else if (elapsedMissile > 4000)
             {
                 elapsedMissile += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                missile.lockOn();
+                missile.lockOn(gameTime);
             }
             else
             {

@@ -15,13 +15,12 @@ namespace Project
     {
         float elapsed;
         public bool isHit = false, isLoading = true, isLocked = false;
-        float rotation = 0;
         const float delay = 50f;
-        int frames = 0;
         Texture2D missile;
         Texture2D locked;
         Texture2D loading;
-        Rectangle sourceRec;
+        float elapsedLock=0;
+        GameTime gameTime;
         ContentManager Content;
 
         public Missile(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
@@ -57,8 +56,9 @@ namespace Project
                 position.Y -= (dY / 80);
             }
         }
-        public void lockOn()
+        public void lockOn(GameTime gt)
         {
+            gameTime = gt;
             isLoading = false;
             isLocked = true;
         }
@@ -95,7 +95,24 @@ namespace Project
             }
             else if (isLocked)
             {
-                spriteBatch.Draw(locked, position, Color.White);
+                elapsedLock += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (elapsedLock > 200f)
+                {
+                    elapsedLock = 0;
+
+                }
+                else
+                {
+                    if (elapsedLock % 200 < 100)
+                    {
+                        spriteBatch.Draw(locked, position, Color.White);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(locked, position, Color.PaleVioletRed);
+                    }
+                }
+                
             }
             else
             {

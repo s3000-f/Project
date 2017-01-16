@@ -17,6 +17,10 @@ namespace Project
         //  Rectangle position;
         Vector2 recSpeed;
         Vector2 recAcc;
+        Vector2 gravity;
+        Rectangle srcRect;
+        float elapsedWalk = 0;
+        float elapsedAir = 0;
         ContentManager Content;
 
         public Barry(ContentManager content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
@@ -24,70 +28,82 @@ namespace Project
 
             this.Content = content;
             barry = Content.Load<Texture2D>("Barry");
+            srcRect = new Rectangle(0, 0, 56, 58);
             recSpeed = Vector2.Zero;
-            recAcc = new Vector2(0f, 0.01f);
+            recAcc = new Vector2(0f, 0.5f);
+            gravity = new Vector2(0f, 0.5f);
         }
 
-        public void jump(GameTime gameTime)
+        public void physics(GameTime gameTime)
         {
-            if (isBottom())
-                position.Y = MaxY - position.Height - 55;
-            if (isTop())
-                position.Y = 26;
-            float time = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 4f;
-            if (recSpeed.Y > -5)
-            {
-                if (recSpeed.Y > 0)
-                {
-                    recSpeed.Y += -(recAcc.Y + 0.015f) * time;
-                }
-                else
-                {
-                    recSpeed += -recAcc * time;
-                }
-            }
 
-            position.X += (int)(recSpeed.X * time);
-            position.Y += (int)(recSpeed.Y * time);
-
-        }
-        public void fall(GameTime gameTime)
-        {
-            if (isTop())
-                position.Y = 55;
-            if (isBottom())
-                position.Y = MaxY - position.Height - 55;
-            float time = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 4f;
-            if (recSpeed.Y < 5)
+            if (position.Y >= 50 && position.Y <= MaxY-170) // this big if is for when exactly shetab and gravity should occur
             {
-                if (recSpeed.Y < 0)
+                if (position.Y == MaxY-170) // this is for animating ground barry
+                    walk(gameTime);
+                if (Keyboard.GetState().IsKeyDown(Keys.Space)) // this is for shetab roo be bala , it should the key is down 
                 {
-                    recSpeed.Y += (recAcc.Y + 0.015f) * time;
+                    // this is for animating air barry
+                        jump();
+                    if (recSpeed.Y < 15) // this is the speed cap, if speed is lower than 15, the gravity will increse the speed
+                        recSpeed.Y += recAcc.Y;
+
                 }
-                else
+                if (Keyboard.GetState().IsKeyUp(Keys.Space) && position.Y != MaxY - 170) // this is for gravity, it should happen when the key isnt pressed
                 {
-                    recSpeed.Y += recAcc.Y * time;
+                     //this is for animating air barry
+                        fall();
+                    if (recSpeed.Y > -10) // this is the seed cap 
+                        recSpeed.Y -= gravity.Y;
+
                 }
+                position.Y -= (int)recSpeed.Y; // this will move barry with dar nazar gereftan recSpeedesh
             }
-            position.X += (int)(recSpeed.X * time);
-            position.Y += (int)(recSpeed.Y * time);
+            else if (position.Y < 50) //if barry hits the roof , this will make his speed 0 and will ajdust it's positionition
+            {
+                position.Y = 50;
+                recSpeed.Y = 0;
+            }
+            else if (position.Y > MaxY-170) // if barry hits the ground, this will make his speed 0 and adjust it's positionition
+            {
+                position.Y = MaxY-170;
+                recSpeed.Y = 0;
+            }
         }
 
         public void walk(GameTime gameTime)
         {
-            recSpeed.Y = 0;
-            recSpeed.X = 0;
-            position.Y = MaxY - position.Height - 55;
-            if ((gameTime.TotalGameTime.Milliseconds / 70) % 2 == 0)
+            barry = Content.Load<Texture2D>("runAnim");
+            elapsedWalk += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsedWalk > 200f)
             {
-                barry = Content.Load<Texture2D>("Barry");
+                elapsedWalk = 0;
 
             }
             else
             {
-                barry = Content.Load<Texture2D>("Barry2");
+                if (elapsedWalk % 200 < 100)
+                {
+                    srcRect.X = 0;
+                }
+                else
+                {
+                    srcRect.X = 56;
+                }
             }
         }
+        
+        public void jump()
+        {
+            barry = Content.Load<Texture2D>("barry_air");
+            srcRect.X = 0;
+        }
+        public void fall()
+        {
+            barry = Content.Load<Texture2D>("barry_air");
+            srcRect.X = 56;
+        }
+
         public override bool isBottom()
         {
             if (position.Y >= (MaxY - position.Height - 55)) return true;
@@ -116,7 +132,7 @@ namespace Project
         }
         public Color[] getTextureData()
         {
-           Color[] c= new Color[barry.Width * barry.Height];
+            Color[] c = new Color[barry.Width * barry.Height];
             barry.GetData(c);
             return c;
         }
@@ -126,7 +142,7 @@ namespace Project
         }
         public void drawBarry(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(barry, position, Color.White);
+            spriteBatch.Draw(barry, position, srcRect, Color.White);
         }
 
     }

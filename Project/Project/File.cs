@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.IO;
 
@@ -6,18 +7,21 @@ namespace Project
 {
     class File
     {
-        public static string[] readFile()
+        public static List<string[]> readFile()
         {
             try
             {
                 Stream stream = TitleContainer.OpenStream("saveGame.sav");
                 StreamReader sreader = new StreamReader(stream);
                 // use StreamReader.ReadLine or other methods to read the file data
-                string line = sreader.ReadLine();
-
-                Console.WriteLine("File Size: " + stream.Length);
+                List<string[]> data;
+                data = new List<string[]>();
+                string line;
+                while ((line = sreader.ReadLine() )!= null)
+                    data.Add(line.Split(','));
+                
                 stream.Close();
-                return line.Split(',');
+                return data;
             }
             catch (FileNotFoundException)
             {
@@ -28,9 +32,10 @@ namespace Project
         {
             try
             {
-                Stream stream = TitleContainer.OpenStream("saveGame.sav");
-                StreamWriter swriter = new StreamWriter(stream);
-                swriter.WriteLine(data);
+                using (var writer = new StreamWriter(@"saveGame.sav"))
+                {
+                    writer.WriteLine(data);
+                }
                 return true;
             }
             catch(FileNotFoundException)
