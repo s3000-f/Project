@@ -18,6 +18,7 @@ namespace Project
         List<float> elapsedMissile;
         // List<float> elapsedZapper;
         bool isPause = false;
+        bool isDead = false;
         int coinStyle;
         int gameMode;
         Score score;
@@ -37,6 +38,8 @@ namespace Project
         Color[] barryTextureData;
         Color[] zapperTextureData;
         Texture2D pause;
+        Texture2D gameOver;
+        SuperSpeed superSpeed;
 
         public Game1()
         {
@@ -53,15 +56,12 @@ namespace Project
 
         protected override void Initialize()
         {
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
-
-        protected override void LoadContent()
+        private void startUp()
         {
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             //Loading Zapper
             zapperList = new List<Zapper>();
             for (int i = 0; i < 6; i++)
@@ -69,7 +69,7 @@ namespace Project
                 int rnd2 = 0;
                 for (int j = 0; j < 3; j++) rnd2 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
                 Zapper zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, 0, 97, 263));
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, -500, 97, 263));
                 zapperTextureData = zapper.getTextureData();
                 zapperList.Add(zapper);
             }
@@ -96,7 +96,7 @@ namespace Project
 
             //Loading Coins
             int rnd3 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
-            coinStyle = 6;
+            coinStyle = rnd.Next(0, 7);
             coinList = Creator.createCoin(coinStyle, Content, graphics);
 
 
@@ -107,7 +107,7 @@ namespace Project
             {
                 rnd3 = rnd.Next(50, graphics.GraphicsDevice.Viewport.Height - 100);
                 missileList.Add(new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, 0, 100, 100)));
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, 300, 100, 100)));
                 elapsedMissile.Add(0f);
             }
             //Load Score
@@ -115,6 +115,18 @@ namespace Project
 
             //Load Pause Screen
             pause = Content.Load<Texture2D>("pause");
+            //Load Game Over Screen
+            gameOver = Content.Load<Texture2D>("gameOver");
+            //Load Super Speed
+            superSpeed = new SuperSpeed(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width, 300, 50, 50));
+        }
+        protected override void LoadContent()
+        {
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            startUp();
+            
 
         }
 
@@ -162,13 +174,25 @@ namespace Project
                 soundEngineInstance.Pause();
 
             }
+            else if (gameMode == 3)
+            {
+                soundEngineInstance.Pause();
+                isDead = true;
+                if(Mouse.GetState().LeftButton==ButtonState.Pressed)
+                {
+                    isDead = false;
+                    gameMode = 1;
+                    startUp();
+                }
+                
+            }
             oldState = Keyboard.GetState();
 
             base.Update(gameTime);
         }
         public void Updater(GameTime gameTime)
         {
-            if(((float)gameTime.TotalGameTime.TotalSeconds>10f && (float)gameTime.TotalGameTime.TotalSeconds < 10.01f) 
+            if (((float)gameTime.TotalGameTime.TotalSeconds > 10f && (float)gameTime.TotalGameTime.TotalSeconds < 10.01f)
                 || ((float)gameTime.TotalGameTime.TotalSeconds > 20f && (float)gameTime.TotalGameTime.TotalSeconds < 20.01f)
                 || ((float)gameTime.TotalGameTime.TotalSeconds > 30f && (float)gameTime.TotalGameTime.TotalSeconds < 30.01f))
             {
@@ -184,7 +208,7 @@ namespace Project
                     int rnd2 = 0;
                     for (int j = 0; j < 3; j++) rnd2 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
                     Zapper zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, 0, 97, 263));
+                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, -500, 97, 263));
                     zapperTextureData = zapper.getTextureData();
                     zapperList.Add(zapper);
                 }
@@ -210,13 +234,17 @@ namespace Project
                 if (barryRectangle.Intersects(zapperRectangle))
                 {
                     // Check collision with person
-                    if (Collision.IntersectPixels(barryTransform, barry.position.Width,
+                    if ((!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
                                         barry.position.Height, barryTextureData,
                                         zapperTransform, zapper.position.Width,
                                         zapper.position.Height, zapperTextureData))
                     {
                         score.writeHighScore();
-                        this.Exit();
+                        zapper.isHit = true;
+                        barry.isDead = true;
+
+
+                        //this.Exit();
                     }
                 }
             }
@@ -244,26 +272,26 @@ namespace Project
                 {
                     missile.collision();
                     score.writeHighScore();
-                    this.Exit();
+                    //this.Exit();
+
+                    barry.isDead = true;
                 }
 
             }
 
 
-
+            gameMode = barry.die();
+            foreach(Zapper z in zapperList)
+            {
+                z.screenZap(gameTime);
+            }
             //Score Calculation
             score.run(gameTime);
             //Changing Coin Pattern
             if (coinList[coinList.Count - 1].isLeft())
             {
-                if (coinStyle >= 6)
-                {
-                    coinStyle = 0;
-                }
-                else
-                {
-                    coinStyle++;
-                }
+                int backupStyle = coinStyle;
+                while ((coinStyle = rnd.Next(0, 7)) == backupStyle) ;
                 coinList = Creator.createCoin(coinStyle, Content, graphics);
 
             }
@@ -312,7 +340,14 @@ namespace Project
                     zapper.regenerate(gameTime);
                 }
             }
-
+            if (superSpeed.nextGen < gameTime.TotalGameTime.TotalSeconds && !superSpeed.isLeft())
+            {
+                superSpeed.move(gameTime);
+            }
+            if (superSpeed.isLeft())
+            {
+                superSpeed.regenerate(gameTime);
+            }
             background.switchBack();
             background2.move();
             background2.switchBack();
@@ -327,9 +362,12 @@ namespace Project
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
 
-
+            
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            superSpeed.drawSuperSpeed(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             foreach (Zapper zapper in zapperList)
@@ -366,7 +404,12 @@ namespace Project
                 spriteBatch.Draw(Content.Load<Texture2D>("pauseAlpha"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
             }
-
+            if (isDead)
+            {
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }

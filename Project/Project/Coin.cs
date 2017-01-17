@@ -34,8 +34,8 @@ namespace Project
         public void move(GameTime gameTime)
         {
             //Coin Rotation
-            elapsed +=(float) gameTime.ElapsedGameTime.TotalMilliseconds;
-            if(elapsed>=delay)
+            elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsed >= delay)
             {
                 if (frames >= 7)
                     frames = 0;
@@ -45,7 +45,7 @@ namespace Project
             }
             sourceRec = new Rectangle(52 * frames, 0, 52, 52);
             //Movement
-                position.X -= 10;
+            position.X -= Background.speed;
             if (position.X + MaxX < 0)
                 position.X = MaxX;
         }
@@ -80,7 +80,7 @@ namespace Project
         public void drawCoin(SpriteBatch spriteBatch)
         {
 
-                spriteBatch.Draw(coin, position,sourceRec, Color.White);
+            spriteBatch.Draw(coin, position, sourceRec, Color.White);
 
         }
 
