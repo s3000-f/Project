@@ -69,7 +69,7 @@ namespace Project
                 int rnd2 = 0;
                 for (int j = 0; j < 3; j++) rnd2 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
                 Zapper zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd2, 97, 263));
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, 0, 97, 263));
                 zapperTextureData = zapper.getTextureData();
                 zapperList.Add(zapper);
             }
@@ -96,7 +96,7 @@ namespace Project
 
             //Loading Coins
             int rnd3 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
-            coinStyle = 0;
+            coinStyle = 6;
             coinList = Creator.createCoin(coinStyle, Content, graphics);
 
 
@@ -107,7 +107,7 @@ namespace Project
             {
                 rnd3 = rnd.Next(50, graphics.GraphicsDevice.Viewport.Height - 100);
                 missileList.Add(new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd3, 100, 100)));
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, 0, 100, 100)));
                 elapsedMissile.Add(0f);
             }
             //Load Score
@@ -168,15 +168,15 @@ namespace Project
         }
         public void Updater(GameTime gameTime)
         {
-            if(((float)gameTime.TotalGameTime.TotalSeconds>30f && (float)gameTime.TotalGameTime.TotalSeconds < 30.01f) 
-                || ((float)gameTime.TotalGameTime.TotalSeconds > 60f && (float)gameTime.TotalGameTime.TotalSeconds < 60.01f)
-                || ((float)gameTime.TotalGameTime.TotalSeconds > 90f && (float)gameTime.TotalGameTime.TotalSeconds < 90.01f))
+            if(((float)gameTime.TotalGameTime.TotalSeconds>10f && (float)gameTime.TotalGameTime.TotalSeconds < 10.01f) 
+                || ((float)gameTime.TotalGameTime.TotalSeconds > 20f && (float)gameTime.TotalGameTime.TotalSeconds < 20.01f)
+                || ((float)gameTime.TotalGameTime.TotalSeconds > 30f && (float)gameTime.TotalGameTime.TotalSeconds < 30.01f))
             {
                 for (int i = 0; i < 3; i++)
                 {
                     int rnd3 = rnd.Next(50, graphics.GraphicsDevice.Viewport.Height - 100);
                     missileList.Add(new Missile(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, rnd3, 100, 100)));
+                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 100, 0, 100, 100)));
                     elapsedMissile.Add(0f);
                 }
                 for (int i = 0; i < 3; i++)
@@ -184,7 +184,7 @@ namespace Project
                     int rnd2 = 0;
                     for (int j = 0; j < 3; j++) rnd2 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 200);
                     Zapper zapper = new Zapper(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
-                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd2, 97, 263));
+                        new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, 0, 97, 263));
                     zapperTextureData = zapper.getTextureData();
                     zapperList.Add(zapper);
                 }
@@ -256,7 +256,7 @@ namespace Project
             //Changing Coin Pattern
             if (coinList[coinList.Count - 1].isLeft())
             {
-                if (coinStyle >= 5)
+                if (coinStyle >= 6)
                 {
                     coinStyle = 0;
                 }
