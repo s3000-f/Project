@@ -112,7 +112,7 @@ namespace Project
         }
         public int getRight()
         {
-            return position.X + position.Width;
+            return position.X + position.Width-100;
         }
         public override bool isLeft()
         {

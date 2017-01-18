@@ -17,11 +17,13 @@ namespace Project
         Random rnd;
         public float nextGen = 0;
         float elapsed;
+        float elapsedOverlay;
         float rotation = 0;
         const float delay = 50f;
         int frames = 0;
         public bool isHit = false;
         Texture2D zapper;
+        Texture2D zapperOverlay;
         Rectangle sourceRec;
         ContentManager Content;
 
@@ -30,6 +32,8 @@ namespace Project
             rnd=new Random();
             this.Content = Content;
             this.zapper = Content.Load<Texture2D>("zappers");
+            zapperOverlay = Content.Load<Texture2D>("zapped00");
+
         }
         public void move(GameTime gameTime)
         {
@@ -46,7 +50,7 @@ namespace Project
             sourceRec = new Rectangle(97 * frames, 0, 97, 263);
 
             //Movement
-            position.X -= 10;
+            position.X -= Background.speed;
 
             //Rotation
             if (isRotating)
@@ -98,9 +102,35 @@ namespace Project
             zapper.GetData(c);
             return c;
         }
+        public void screenZap(GameTime gameTime)
+        {
+            if(isHit)
+            {
+                if(elapsedOverlay>100f)
+                {
+                    zapperOverlay = Content.Load<Texture2D>("zapped00");
+                }
+                else if(elapsedOverlay>70f)
+                {
+                    elapsedOverlay += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    zapperOverlay = Content.Load<Texture2D>("zapped50");
+                }
+                else if(elapsedOverlay>35f)
+                {
+                    elapsedOverlay += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    zapperOverlay = Content.Load<Texture2D>("zapped70");
+                }
+                else
+                {
+                    elapsedOverlay += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    zapperOverlay = Content.Load<Texture2D>("zapped90");
+                }
+            }
+        }
         public void drawZapper(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(zapper, position, sourceRec, Color.White, rotation, new Vector2(position.Width / 2, position.Height / 2), new SpriteEffects(), 0f);
+            spriteBatch.Draw(zapperOverlay, Vector2.Zero, Color.White);
         }
     }
 }

@@ -14,7 +14,11 @@ namespace Project
     class Barry : Moving
     {
         Texture2D barry;
-        //  Rectangle position;
+        float elapsedDeath;
+        public bool isDead = false;
+        bool wasDead = false;
+        bool wasFallen = false;
+        bool finalDeath = false;
         Vector2 recSpeed;
         Vector2 recAcc;
         Vector2 gravity;
@@ -39,9 +43,21 @@ namespace Project
 
             if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
             {
-                if (position.Y == MaxY - 170) // this is for animating ground barry
+                if (position.Y == MaxY - 170 && !isDead) // this is for animating ground barry
                     walk(gameTime);
-                if (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed) // this is for shetab roo be bala , it should the key is down 
+                else if (position.Y == MaxY - 170 && isDead)
+                {
+                    if (elapsedDeath < 100f)
+                    {
+                        elapsedDeath += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        fallen();
+                    }
+                    else
+                    {
+                        finalDeath = true;
+                    }
+                }
+                if ((!isDead) && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed))// this is for shetab roo be bala , it should the key is down 
                 {
                     // this is for animating air barry
                     jump();
@@ -49,10 +65,12 @@ namespace Project
                         recSpeed.Y += recAcc.Y;
 
                 }
-                if (Keyboard.GetState().IsKeyUp(Keys.Space) && Keyboard.GetState().IsKeyUp(Keys.Up) && Mouse.GetState().LeftButton == ButtonState.Released && position.Y != MaxY - 170) // this is for gravity, it should happen when the key isnt pressed
+                if (isDead || (Keyboard.GetState().IsKeyUp(Keys.Space) && Keyboard.GetState().IsKeyUp(Keys.Up) && Mouse.GetState().LeftButton == ButtonState.Released && position.Y != MaxY - 170)) // this is for gravity, it should happen when the key isnt pressed
                 {
                     //this is for animating air barry
-                    fall();
+                    if (!isDead) fall();
+                    else
+                        fallToDeath();
                     if (recSpeed.Y > -10) // this is the seed cap 
                         recSpeed.Y -= gravity.Y;
 
@@ -136,8 +154,38 @@ namespace Project
             barry.GetData(c);
             return c;
         }
-        public void die()
+        public int die()
         {
+            // elapsedDeath += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            //if(elapsedDeath>=)
+            if (finalDeath)
+            {
+                barry = Content.Load<Texture2D>("dead");
+                return 3;
+            }
+
+            else return 1;
+        }
+        private void fallToDeath()
+        {
+            if (!wasDead)
+            {
+                wasDead = true;
+                barry = Content.Load<Texture2D>("deadFall");
+                srcRect.X = 0;
+
+            }
+            position.X += 5;
+
+        }
+        private void fallen()
+        {
+            if (!wasFallen)
+            {
+                wasFallen = true;
+                barry = Content.Load<Texture2D>("deadHit");
+                srcRect.X = 0;
+            }
 
         }
         public void drawBarry(SpriteBatch spriteBatch)

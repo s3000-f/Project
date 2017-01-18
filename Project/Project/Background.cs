@@ -13,6 +13,7 @@ namespace Project
 {
     class Background : Moving
     {
+        public static int speed=10;
         Texture2D backGround;
         Vector2 recSpeed;
         Vector2 recAcc;
@@ -26,7 +27,7 @@ namespace Project
         }
         public void move()
         {
-            position.X -= 10;
+            position.X -= speed;
         }
         public void switchBack()
         {
