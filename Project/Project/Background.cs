@@ -31,7 +31,7 @@ namespace Project
         }
         public void switchBack()
         {
-            if (position.X + MaxX-5 < 0)
+            if (position.X + MaxX< 0)
                 position.X = MaxX;
         }
 

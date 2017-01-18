@@ -18,8 +18,6 @@ namespace Project
         public bool isHit = false;
         Texture2D coin;
         Rectangle sourceRec;
-        Vector2 recSpeed;
-        Vector2 recAcc;
         ContentManager Content;
         SoundEffect collisSound;
         SoundEffectInstance se_Instance;
