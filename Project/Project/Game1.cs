@@ -17,6 +17,7 @@ namespace Project
 
         List<float> elapsedMissile;
         // List<float> elapsedZapper;
+        float speedTime = 0;
         bool isPause = false;
         bool isDead = false;
         int coinStyle;
@@ -40,6 +41,7 @@ namespace Project
         Texture2D pause;
         Texture2D gameOver;
         SuperSpeed superSpeed;
+        PowerUp powerUp;
 
         public Game1()
         {
@@ -119,6 +121,9 @@ namespace Project
             gameOver = Content.Load<Texture2D>("gameOver");
             //Load Super Speed
             superSpeed = new SuperSpeed(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width + 100, 300, 80, 80));
+            //Load PowerUp
+            powerUp = new PowerUp(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
                     new Rectangle(graphics.GraphicsDevice.Viewport.Width, 300, 50, 50));
         }
         protected override void LoadContent()
@@ -126,7 +131,7 @@ namespace Project
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             startUp();
-            
+
 
         }
 
@@ -178,13 +183,13 @@ namespace Project
             {
                 soundEngineInstance.Pause();
                 isDead = true;
-                if(Mouse.GetState().LeftButton==ButtonState.Pressed)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
                     isDead = false;
                     gameMode = 1;
                     startUp();
                 }
-                
+
             }
             oldState = Keyboard.GetState();
 
@@ -234,7 +239,7 @@ namespace Project
                 if (barryRectangle.Intersects(zapperRectangle))
                 {
                     // Check collision with person
-                    if ((!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
+                    if ((!superSpeed.isActivated) && (!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
                                         barry.position.Height, barryTextureData,
                                         zapperTransform, zapper.position.Width,
                                         zapper.position.Height, zapperTextureData))
@@ -266,7 +271,7 @@ namespace Project
             //Missile Hit Check
             foreach (Missile missile in missileList)
             {
-                if ((!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
+                if ((!superSpeed.isActivated) && (!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
                                     || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
                                     || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
                 {
@@ -278,10 +283,17 @@ namespace Project
                 }
 
             }
-
-
+            if ((!superSpeed.isActivated) && ((barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y && barry.getBottom() < superSpeed.getBottom())
+                                    || (barry.getRight() > superSpeed.position.X && barry.getBottom() > superSpeed.position.Y && barry.position.Y < superSpeed.getBottom() && barry.position.X < superSpeed.getRight())
+                                    || (barry.position.Y < superSpeed.getBottom() && barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y)))
+            {
+                superSpeed.collide();
+                superSpeed.regenerate(gameTime);
+                speedTime = (float)gameTime.TotalGameTime.TotalSeconds;
+            }
+            if (superSpeed.isActivated && speedTime + 3 < (float)gameTime.TotalGameTime.TotalSeconds) superSpeed.isActivated = false;
             gameMode = barry.die();
-            foreach(Zapper z in zapperList)
+            foreach (Zapper z in zapperList)
             {
                 z.screenZap(gameTime);
             }
@@ -297,7 +309,7 @@ namespace Project
             }
 
             //Barry Movement
-            barry.physics(gameTime);
+            barry.physics(gameTime, superSpeed.isActivated);
 
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
@@ -361,11 +373,10 @@ namespace Project
             //Drawing Barry and Background
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
-
-            
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
             spriteBatch.End();
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             superSpeed.drawSuperSpeed(spriteBatch);
             spriteBatch.End();

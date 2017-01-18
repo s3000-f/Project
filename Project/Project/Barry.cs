@@ -38,8 +38,14 @@ namespace Project
             gravity = new Vector2(0f, 0.5f);
         }
 
-        public void physics(GameTime gameTime)
+        public void physics(GameTime gameTime, bool isSpeedy)
         {
+            if (isSpeedy)
+            {
+                moveOver();
+            }
+            else
+                moveBack();
 
             if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
             {
@@ -89,6 +95,32 @@ namespace Project
             }
         }
 
+        public void moveOver()
+        {
+            if(Background.speed<150)
+            {
+                Background.speed = 150;
+            }
+            if(position.X<1600)
+            {
+                position.X += 30;
+            }
+            gravity.Y = 0.05f;
+            recAcc.Y = 0.05f;
+        }
+        public void moveBack()
+        {
+            if (Background.speed > 10)
+            {
+                Background.speed  =10;
+            }
+            if (position.X>200 && !isDead)
+            {
+                position.X -= 30;
+            }
+            gravity.Y = 0.5f;
+            recAcc.Y = 0.5f;
+        }
         public void walk(GameTime gameTime)
         {
             barry = Content.Load<Texture2D>("runAnim");

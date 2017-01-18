@@ -14,7 +14,8 @@ namespace Project
 {
     class SuperSpeed : Moving
     {
-        float elapsedSin=0;
+        public bool isActivated = false;
+        float elapsedSin = 0;
         public float nextGen = 0;
         const float delay = 100f;
         public bool isHit = false;
@@ -29,7 +30,7 @@ namespace Project
         public void move(GameTime gameTime)
         {
             position.X -= Background.speed / 2;
-            if(elapsedSin/1000>(float)Math.PI*2)
+            if (elapsedSin / 1000 > (float)Math.PI * 2)
             {
                 elapsedSin = 0;
             }
@@ -37,7 +38,7 @@ namespace Project
             {
                 elapsedSin += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             }
-            position.Y = (int)(Math.Sin((double)elapsedSin/1000)*400)+540;
+            position.Y = (int)(Math.Sin((double)elapsedSin / 1000) * 400) + 540;
         }
         public void regenerate(GameTime gameTime)
         {
@@ -53,9 +54,22 @@ namespace Project
             else return false;
 
         }
+        public void collide()
+        {
+            isActivated = true;
+        }
+        public int getRight()
+        {
+            return position.X + position.Width;
+        }
+        public int getBottom()
+        {
+            return position.Y + position.Height;
+        }
         public void drawSuperSpeed(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(superSpeed, position, Color.White);
+            if (!isActivated)
+                spriteBatch.Draw(superSpeed, position, Color.White);
         }
     }
 }
