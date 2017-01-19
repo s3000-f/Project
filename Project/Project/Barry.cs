@@ -34,6 +34,8 @@ namespace Project
         {
 
             this.Content = content;
+            oldState = Keyboard.GetState();
+            oldMouseState = Mouse.GetState();
             barry = Content.Load<Texture2D>("Barry");
             srcRect = new Rectangle(0, 0, 56, 58);
             recSpeed = Vector2.Zero;
@@ -49,43 +51,46 @@ namespace Project
             }
             else
                 moveBack();
+
+            bool b=false;
             if (isGravityActive)
             {
                 if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
                 {
                     if ((position.Y == MaxY - 170) && !isDead) // this is for animating ground barry
                     {
-                        walkUp(gameTime);
+                        walkDown(gameTime);
                     }
                     else if ((position.Y == 50) && !isDead) // this is for animating ground barry
                     {
-                        walkDown(gameTime);
+
+                        walkUp(gameTime);
                     }
-                    else if (position.Y == MaxY - 170 && isDead)/// CHANGE
+                    else if (isDead)/// CHANGE
                     {
                         isGravityActive = false;
                         isDead = false;
                     }
-                    if ((!isDead) && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed))// this is for shetab roo be bala , it should the key is down 
+                    
+                    if ((!isDead) 
+                        && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed) 
+                        && (oldMouseState.LeftButton == ButtonState.Released && oldState.IsKeyUp(Keys.Space) && oldState.IsKeyUp(Keys.Space)))// this is for shetab roo be bala , it should the key is down 
                     {
-                        // this is for animating air barry
-                        gravity = -gravity;
-                        if (isRotationUp)
-                        {
-                            rotateDown(gameTime);
-                        }
-                        else
-                        {
-                            rotateUp(gameTime);
-                        }
-                        if (recSpeed.Y > -15 && recSpeed.Y < 15)
-                        {
-                            recSpeed.Y -= gravity.Y;
 
-                        }
+
+                        oldMouseState = Mouse.GetState();
+                        // this is for animating air barry
+                        gravity.Y = -gravity.Y;
+                        b = true;
+                    }
+                   
+                    
+                    
+                    if (recSpeed.Y > -15 && recSpeed.Y < 15)
+                    {
+                        recSpeed.Y -= gravity.Y;
 
                     }
-
                     position.Y -= (int)recSpeed.Y; // this will move barry with dar nazar gereftan recSpeedesh
                 }
                 else if (position.Y < 50) //if barry hits the roof , this will make his speed 0 and will ajdust it's positionition
@@ -98,9 +103,8 @@ namespace Project
                     position.Y = MaxY - 170;
                     recSpeed.Y = 0;
                 }
-                oldState = Keyboard.GetState();
-                oldMouseState = Mouse.GetState();
-
+                
+                   
             }
             else
             {
@@ -189,39 +193,49 @@ namespace Project
                 }
             }
         }
-        public void rotateUp(GameTime gameTime)
+        public bool rotateUp(GameTime gameTime)
         {
             barry = Content.Load<Texture2D>("gravityDownUp");
             srcRect.Height = 127;
             srcRect.Width = 104;
             elapsedWalk += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedWalk > 30f)
+            if (elapsedWalk > 15f)
             {
                 elapsedWalk = 0;
                 if (srcRect.X > 520)
+                {
                     srcRect.X = 0;
+                    return true;
+                }
+                    
                 else
                 {
                     srcRect.X += 104;
                 }
             }
+            return false;
         }
-        public void rotateDown(GameTime gameTime)
+        public bool rotateDown(GameTime gameTime)
         {
             barry = Content.Load<Texture2D>("gravityUpDown");
             srcRect.Height = 127;
             srcRect.Width = 104;
             elapsedWalk += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedWalk > 30f)
+            if (elapsedWalk > 15f)
             {
                 elapsedWalk = 0;
                 if (srcRect.X > 520)
+                {
                     srcRect.X = 0;
+                    return false;
+                }
+                    
                 else
                 {
                     srcRect.X += 104;
                 }
             }
+            return true;
         }
 
         public void moveOver()
@@ -328,6 +342,8 @@ namespace Project
             if (finalDeath)
             {
                 barry = Content.Load<Texture2D>("dead");
+                srcRect.Width = 56;
+                srcRect.Height = 58;
                 return 3;
             }
 
@@ -339,6 +355,8 @@ namespace Project
             {
                 wasDead = true;
                 barry = Content.Load<Texture2D>("deadFall");
+                srcRect.Width = 56;
+                srcRect.Height = 58;
                 srcRect.X = 0;
 
             }
@@ -351,6 +369,8 @@ namespace Project
             {
                 wasFallen = true;
                 barry = Content.Load<Texture2D>("deadHit");
+                srcRect.Width = 56;
+                srcRect.Height = 58;
                 srcRect.X = 0;
             }
 

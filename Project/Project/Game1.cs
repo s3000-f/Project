@@ -52,7 +52,7 @@ namespace Project
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             Content.RootDirectory = "Content";
             rnd = new Random();
         }
@@ -365,7 +365,7 @@ namespace Project
                 if (barryRectangle.Intersects(zapperRectangle))
                 {
                     // Check collision with person
-                    if ((!superSpeed.isActivated) && (!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
+                    if ((!superSpeed.isActivated && !zapper.isHit) && (!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
                                         barry.position.Height, barryTextureData,
                                         zapperTransform, zapper.position.Width,
                                         zapper.position.Height, zapperTextureData))
