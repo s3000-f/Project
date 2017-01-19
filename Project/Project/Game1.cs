@@ -66,6 +66,9 @@ namespace Project
 
         private void startUp()
         {
+            //Loading PowerUp
+            powerUp = new PowerUp(Content, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0, 0,
+                    new Rectangle(graphics.GraphicsDevice.Viewport.Width - 500, rnd.Next(200, 800), 132, 132));
             //Loading Lazer
             lazerList = Creator.createLazer(rnd.Next(0, 4), Content);
             //Loading Zapper
@@ -416,6 +419,7 @@ namespace Project
             //Drawing Barry and Background
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
+            powerUp.drawPowerUp(spriteBatch);
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
             spriteBatch.End();
