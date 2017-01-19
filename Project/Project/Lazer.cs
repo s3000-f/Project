@@ -40,7 +40,7 @@ namespace Project
         }
         public int getBottom()
         {
-            return position.Y + position.Height;
+            return position.Y + position.Height -10;
         }
         public void regenerate(GameTime gameTime)
         {
@@ -62,7 +62,8 @@ namespace Project
                 {
                     srcRect.Y = 0;
                 }
-                else if (elapsedFire > 3000)
+                else if (elapsedFire > 2500)
+
                 {
                     isActive = true;
                     srcRect.Y = 648;

@@ -255,9 +255,9 @@ namespace Project
             #region lazer
             foreach (Lazer lazer in lazerList)
             {
-                if ((!lazer.isHit && lazer.isActive) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > lazer.position.Y && barry.getBottom() < lazer.getBottom())
-                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > lazer.position.Y && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
-                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > lazer.position.Y)))
+                if ((!lazer.isHit && lazer.isActive) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50) && barry.getBottom() < lazer.getBottom())
+                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y +50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
+                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50))))
                 {
                     score.writeHighScore();
                     //this.Exit();
