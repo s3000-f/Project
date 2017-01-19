@@ -146,10 +146,12 @@ namespace Project
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
 
             if (gameMode == 0)
+                //first menu
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
             }
             else if (gameMode == 1)
+                //playing
             {
                 Updater(gameTime);
                 if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
@@ -169,6 +171,7 @@ namespace Project
 
             }
             else if (gameMode == 2)
+                //pause
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
                 {
@@ -180,6 +183,7 @@ namespace Project
 
             }
             else if (gameMode == 3)
+                // barry dies
             {
                 soundEngineInstance.Pause();
                 isDead = true;
