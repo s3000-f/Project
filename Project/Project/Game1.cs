@@ -416,6 +416,14 @@ namespace Project
             }
             #endregion
 
+            if ((!superSpeed.isActivated) && ((barry.position.X > powerUp.position.X && barry.position.X < powerUp.getRight() && barry.getBottom() > (powerUp.position.Y + 50) && barry.getBottom() < powerUp.getBottom())
+                                   || (barry.getRight() > powerUp.position.X && barry.getBottom() > (powerUp.position.Y + 50) && barry.position.Y < powerUp.getBottom() && barry.position.X < powerUp.getRight())
+                                   || (barry.position.Y < powerUp.getBottom() && barry.position.X > powerUp.position.X && barry.position.X < powerUp.getRight() && barry.getBottom() > (powerUp.position.Y + 50))))
+            {
+                powerUp.regenerate(gameTime);
+                barry.isGravityActive = true;
+            }
+            if (powerUp.isLeft()) powerUp.regenerate(gameTime);
             powerUp.move(gameTime);
             background.move();
             background.switchBack(background2.position.X + background2.position.Width);
