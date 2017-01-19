@@ -18,6 +18,7 @@ namespace Project
         List<float> elapsedMissile;
         // List<float> elapsedZapper;
         float speedTime = 0;
+        float lazerNextGen = 0;
         bool isPause = false;
         bool isDead = false;
         int coinStyle;
@@ -42,6 +43,7 @@ namespace Project
         Texture2D gameOver;
         SuperSpeed superSpeed;
         PowerUp powerUp;
+        List<Lazer> lazerList;
 
         public Game1()
         {
@@ -64,6 +66,8 @@ namespace Project
 
         private void startUp()
         {
+            //Loading Lazer
+            lazerList = Creator.createLazer(rnd.Next(0, 4), Content);
             //Loading Zapper
             zapperList = new List<Zapper>();
             for (int i = 0; i < 6; i++)
@@ -197,9 +201,10 @@ namespace Project
         }
         public void Updater(GameTime gameTime)
         {
+            #region make harder
             if (((float)gameTime.TotalGameTime.TotalSeconds > 10f && (float)gameTime.TotalGameTime.TotalSeconds < 10.01f)
-                || ((float)gameTime.TotalGameTime.TotalSeconds > 20f && (float)gameTime.TotalGameTime.TotalSeconds < 20.01f)
-                || ((float)gameTime.TotalGameTime.TotalSeconds > 30f && (float)gameTime.TotalGameTime.TotalSeconds < 30.01f))
+                    || ((float)gameTime.TotalGameTime.TotalSeconds > 20f && (float)gameTime.TotalGameTime.TotalSeconds < 20.01f)
+                    || ((float)gameTime.TotalGameTime.TotalSeconds > 30f && (float)gameTime.TotalGameTime.TotalSeconds < 30.01f))
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -218,6 +223,113 @@ namespace Project
                     zapperList.Add(zapper);
                 }
             }
+            #endregion
+
+            #region coin
+            //Coin Hit Check
+            foreach (Coin coin in coinList)
+            {
+                if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
+                                    || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
+                                    || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
+                {
+                    coin.collision();
+                    score.gotCoins();
+                }
+
+            }
+            //Changing Coin Pattern
+            if (coinList[coinList.Count - 1].isLeft())
+            {
+                int backupStyle = coinStyle;
+                while ((coinStyle = rnd.Next(0, 7)) == backupStyle) ;
+                coinList = Creator.createCoin(coinStyle, Content, graphics);
+
+            }
+            #endregion
+
+            #region lazer
+            foreach (Lazer lazer in lazerList)
+            {
+                if ((!lazer.isHit && lazer.isActive) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > lazer.position.Y && barry.getBottom() < lazer.getBottom())
+                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > lazer.position.Y && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
+                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > lazer.position.Y)))
+                {
+                    score.writeHighScore();
+                    //this.Exit();
+                    lazer.isHit = true;
+                    barry.isDead = true;
+                }
+
+            }
+            #endregion
+
+            gameMode = barry.die();
+
+            //Score Calculation
+            score.run(gameTime);
+
+
+            //Barry Movement
+            barry.physics(gameTime, superSpeed.isActivated);
+
+            //Movements
+            foreach (Coin coin in coinList) coin.move(gameTime);
+            if ((float)gameTime.TotalGameTime.TotalSeconds > lazerNextGen)
+                foreach (Lazer lazer in lazerList)
+                    lazer.turnOn(gameTime);
+            if (!lazerList[lazerList.Count - 1].isActive && lazerList[lazerList.Count - 1].isDown && lazerList[lazerList.Count - 1].position.Y == 0)
+            {
+                lazerNextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)rnd.Next(7, 15);
+                lazerList = Creator.createLazer(rnd.Next(0, 4), Content);
+            }
+
+            #region missile
+            //Missile Hit Check
+            foreach (Missile missile in missileList)
+            {
+                if ((!superSpeed.isActivated) && (!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
+                                    || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
+                                    || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
+                {
+                    missile.collision();
+                    score.writeHighScore();
+                    //this.Exit();
+
+                    barry.isDead = true;
+                }
+
+            }
+            foreach (Missile missile in missileList)
+            {
+                missile.move(gameTime);
+                if (missile.nextGen < gameTime.TotalGameTime.TotalSeconds && !missile.isLeft())
+                {
+                    if (elapsedMissile[missileList.IndexOf(missile)] > 5000)
+                    {
+                        missile.fire();
+                    }
+                    else if (elapsedMissile[missileList.IndexOf(missile)] > 4000)
+                    {
+                        elapsedMissile[missileList.IndexOf(missile)] += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        missile.lockOn(gameTime);
+                    }
+                    else
+                    {
+                        elapsedMissile[missileList.IndexOf(missile)] += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
+                    }
+                }
+                else if (missile.isLeft())
+                {
+                    missile.regenerate(gameTime);
+                    //     Console.WriteLine("-->"+missileList.IndexOf(missile));
+                    elapsedMissile[missileList.IndexOf(missile)] = 0;
+                }
+            }
+            #endregion
+
+            #region zapper
             Matrix barryTransform =
                 Matrix.CreateTranslation(new Vector3(new Vector2(barry.position.X, barry.position.Y), 0.0f));
 
@@ -253,93 +365,9 @@ namespace Project
                     }
                 }
             }
-
-
-            //Coin Hit Check
-            foreach (Coin coin in coinList)
-            {
-                if ((!coin.isHit) && ((barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y && barry.getBottom() < coin.getBottom())
-                                    || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
-                                    || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
-                {
-                    coin.collision();
-                    score.gotCoins();
-                }
-
-            }
-
-            //Missile Hit Check
-            foreach (Missile missile in missileList)
-            {
-                if ((!superSpeed.isActivated) && (!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
-                                    || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
-                                    || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
-                {
-                    missile.collision();
-                    score.writeHighScore();
-                    //this.Exit();
-
-                    barry.isDead = true;
-                }
-
-            }
-            if ((!superSpeed.isActivated) && ((barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y && barry.getBottom() < superSpeed.getBottom())
-                                    || (barry.getRight() > superSpeed.position.X && barry.getBottom() > superSpeed.position.Y && barry.position.Y < superSpeed.getBottom() && barry.position.X < superSpeed.getRight())
-                                    || (barry.position.Y < superSpeed.getBottom() && barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y)))
-            {
-                superSpeed.collide();
-                superSpeed.regenerate(gameTime);
-                speedTime = (float)gameTime.TotalGameTime.TotalSeconds;
-            }
-            if (superSpeed.isActivated && speedTime + 3 < (float)gameTime.TotalGameTime.TotalSeconds) superSpeed.isActivated = false;
-            gameMode = barry.die();
             foreach (Zapper z in zapperList)
             {
                 z.screenZap(gameTime);
-            }
-            //Score Calculation
-            score.run(gameTime);
-            //Changing Coin Pattern
-            if (coinList[coinList.Count - 1].isLeft())
-            {
-                int backupStyle = coinStyle;
-                while ((coinStyle = rnd.Next(0, 7)) == backupStyle) ;
-                coinList = Creator.createCoin(coinStyle, Content, graphics);
-
-            }
-
-            //Barry Movement
-            barry.physics(gameTime, superSpeed.isActivated);
-
-            //Movements
-            foreach (Coin coin in coinList) coin.move(gameTime);
-            background.move();
-            foreach (Missile missile in missileList)
-            {
-                missile.move(gameTime);
-                if (missile.nextGen < gameTime.TotalGameTime.TotalSeconds && !missile.isLeft())
-                {
-                    if (elapsedMissile[missileList.IndexOf(missile)] > 5000)
-                    {
-                        missile.fire();
-                    }
-                    else if (elapsedMissile[missileList.IndexOf(missile)] > 4000)
-                    {
-                        elapsedMissile[missileList.IndexOf(missile)] += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                        missile.lockOn(gameTime);
-                    }
-                    else
-                    {
-                        elapsedMissile[missileList.IndexOf(missile)] += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                        missile.load(new Vector2(barry.position.X, barry.position.Y), gameTime);
-                    }
-                }
-                else if (missile.isLeft())
-                {
-                    missile.regenerate(gameTime);
-                    //     Console.WriteLine("-->"+missileList.IndexOf(missile));
-                    elapsedMissile[missileList.IndexOf(missile)] = 0;
-                }
             }
             foreach (Zapper zapper in zapperList)
             {
@@ -352,6 +380,18 @@ namespace Project
                     zapper.regenerate(gameTime);
                 }
             }
+            #endregion
+
+            #region superspeed
+            if ((!superSpeed.isActivated) && ((barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y && barry.getBottom() < superSpeed.getBottom())
+                                    || (barry.getRight() > superSpeed.position.X && barry.getBottom() > superSpeed.position.Y && barry.position.Y < superSpeed.getBottom() && barry.position.X < superSpeed.getRight())
+                                    || (barry.position.Y < superSpeed.getBottom() && barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y)))
+            {
+                superSpeed.collide();
+                superSpeed.regenerate(gameTime);
+                speedTime = (float)gameTime.TotalGameTime.TotalSeconds;
+            }
+            if (superSpeed.isActivated && speedTime + 3 < (float)gameTime.TotalGameTime.TotalSeconds) superSpeed.isActivated = false;
             if (superSpeed.nextGen < gameTime.TotalGameTime.TotalSeconds && !superSpeed.isLeft())
             {
                 superSpeed.move(gameTime);
@@ -360,9 +400,12 @@ namespace Project
             {
                 superSpeed.regenerate(gameTime);
             }
-            background.switchBack();
+            #endregion
+
+            background.move();
+            background.switchBack(background2.position.X + background2.position.Width);
             background2.move();
-            background2.switchBack();
+            background2.switchBack(background.position.X + background.position.Width);
         }
 
 
@@ -397,6 +440,12 @@ namespace Project
             ////Passed distance
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             score.drawScore(spriteBatch);
+            spriteBatch.End();
+
+            //Drawing Lazers
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            foreach (Lazer lazer in lazerList)
+                lazer.drawLazer(spriteBatch);
             spriteBatch.End();
 
             //Drawing coins

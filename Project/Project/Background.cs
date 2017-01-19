@@ -13,7 +13,7 @@ namespace Project
 {
     class Background : Moving
     {
-        public static int speed=10;
+        public static int speed = 10;
         Texture2D backGround;
         Vector2 recSpeed;
         Vector2 recAcc;
@@ -29,10 +29,10 @@ namespace Project
         {
             position.X -= speed;
         }
-        public void switchBack()
+        public void switchBack(int x)
         {
-            if (position.X + MaxX< 0)
-                position.X = MaxX;
+            if (position.X + MaxX - 5 < 0)
+                position.X = x;
         }
 
         public void drawBackground(SpriteBatch spriteBatch)
