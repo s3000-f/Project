@@ -267,7 +267,7 @@ namespace Project
                     lazer.isHit = true;
                     barry.isDead = true;
                 }
-
+                 
             }
             #endregion
 
@@ -415,7 +415,6 @@ namespace Project
                 superSpeed.regenerate(gameTime);
             }
             #endregion
-
             powerUp.move(gameTime);
             background.move();
             background.switchBack(background2.position.X + background2.position.Width);
