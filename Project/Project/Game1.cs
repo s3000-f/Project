@@ -274,7 +274,7 @@ namespace Project
             gameMode = barry.die();
 
             //Score Calculation
-            score.run(gameTime);
+            score.run(gameTime,superSpeed.isActivated);
 
 
             //Barry Movement

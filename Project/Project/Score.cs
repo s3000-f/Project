@@ -62,14 +62,19 @@ namespace Project
         {
             takenCoins++;
         }
-        public void run(GameTime gameTime)
+        public void run(GameTime gameTime, bool isSpeedy)
         {
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsed >= 60)
+            if (elapsed >= 60 && !isSpeedy)
             {
                 meters++;
                 elapsed = 0;
             }
+            else if (elapsed >= 20 && isSpeedy)
+                {
+                    meters+=2;
+                    elapsed = 0;
+                }
         }
         public void writeHighScore()
         {
@@ -174,5 +179,12 @@ namespace Project
             }
             spriteBatch.Draw(coinSign, new Rectangle(20 + i * 17, 80, 24, 24), Color.White);
         }
+
+        public void drawDeadScore(SpriteBatch spritebatch)
+        {
+
+        }
+
+
     }
 }
