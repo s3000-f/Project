@@ -49,6 +49,14 @@ namespace Project
                 }
             }
         }
+        public int getRight()
+        {
+            return position.X + position.Width;
+        }
+        public int getBottom()
+        {
+            return position.Y + position.Height;
+        }
         public void regenerate(GameTime gameTime)
         {
             position.X = MaxX;
