@@ -258,7 +258,7 @@ namespace Project
             #region lazer
             foreach (Lazer lazer in lazerList)
             {
-                if ((!lazer.isHit && lazer.isActive) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50) && barry.getBottom() < lazer.getBottom())
+                if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50) && barry.getBottom() < lazer.getBottom())
                                     || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y +50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
                                     || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50))))
                 {
@@ -283,8 +283,15 @@ namespace Project
             //Movements
             foreach (Coin coin in coinList) coin.move(gameTime);
             if ((float)gameTime.TotalGameTime.TotalSeconds > lazerNextGen)
+            {
                 foreach (Lazer lazer in lazerList)
                     lazer.turnOn(gameTime);
+                foreach (Zapper zapper in zapperList) 
+                    if(zapper.isLeft() || zapper.isRight()) zapper.regenerate(gameTime);
+                foreach (Missile missile in missileList)
+                    if (missile.isLeft() || missile.isRight()) missile.regenerate(gameTime);
+            }
+                
             if (!lazerList[lazerList.Count - 1].isActive && lazerList[lazerList.Count - 1].isDown && lazerList[lazerList.Count - 1].position.Y == 0)
             {
                 lazerNextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)rnd.Next(7, 15);
@@ -409,6 +416,7 @@ namespace Project
             }
             #endregion
 
+            powerUp.move(gameTime);
             background.move();
             background.switchBack(background2.position.X + background2.position.Width);
             background2.move();
@@ -423,9 +431,14 @@ namespace Project
             //Drawing Barry and Background
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             barry.drawBarry(spriteBatch);
-            powerUp.drawPowerUp(spriteBatch);
+
             background.drawBackground(spriteBatch);
             background2.drawBackground(spriteBatch);
+            spriteBatch.End();
+
+
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            powerUp.drawPowerUp(spriteBatch);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);

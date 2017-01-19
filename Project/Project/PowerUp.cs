@@ -26,18 +26,20 @@ namespace Project
             this.Content = Content;
             powerUp = Content.Load<Texture2D>("power");
             srcRect = new Rectangle(0, 0, 132, 132);
+            position.Height = 264;
+            position.Width = 264;
         }
         public void move(GameTime gameTime)
         {
             position.X -= Background.speed;
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if(elapsed>60f)
+            if(elapsed>600f)
             {
                 elapsed = 0;
             }
             else 
             {
-                if (elapsed % 60 > 30)
+                if (elapsed % 600 > 300)
                 {
                     srcRect.X = 0;
                 }
@@ -56,6 +58,8 @@ namespace Project
         }
         public void drawPowerUp(SpriteBatch spriteBatch)
         {
+            position.Height = 100;
+            position.Width = 100;
             spriteBatch.Draw(powerUp, position, srcRect, Color.White);
         }
     }
