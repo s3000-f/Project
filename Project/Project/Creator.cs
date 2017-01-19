@@ -505,5 +505,30 @@ namespace Project
             return coinList;
         }
 
+        public static List<Lazer> createLazer(int style, ContentManager Content)
+        {
+            List<Lazer> lazerList = new List<Lazer>();
+            switch (style)
+            {
+                case 0:
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,100, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,280, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-100, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-280, new Rectangle(0, -300, 1920, 180)));
+                    break;
+                case 1:
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,100, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-100, new Rectangle(0, -300, 1920, 180)));
+                    break;
+                case 2:
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,360, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,540, new Rectangle(0, -300, 1920, 180)));
+                    break;
+                case 3:
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,460, new Rectangle(0, -300, 1920, 180)));
+                    break;
+            }
+            return lazerList;
+        }
     }
 }

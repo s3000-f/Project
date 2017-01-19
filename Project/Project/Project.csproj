@@ -78,6 +78,7 @@
     <Compile Include="Collision.cs" />
     <Compile Include="Creator.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="Lazer.cs" />
     <Compile Include="Missile.cs" />
     <Compile Include="Moving.cs" />
     <Compile Include="PowerUp.cs" />
