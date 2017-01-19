@@ -23,6 +23,7 @@ namespace Project
             switch (style)
             {
                 case 0:
+                    //square 
                     for (int i = 0; i < 5; i++)
                     {
                         for (int j = 0; j < 5; j++)
@@ -33,6 +34,7 @@ namespace Project
                     }
                     break;
                 case 1:
+                    //table
                     int Px = width + 280;
                     int Py = rnd;
 
@@ -134,6 +136,7 @@ namespace Project
                     }
                     break;
                 case 2:
+                    //barry
                     int xx = width;
                     int yy = rnd;
                     // start B
@@ -279,6 +282,7 @@ namespace Project
 
                     break;
                 case 3:
+                    //heart
                     int x = width;
                     int y = rnd;
                     coinList.Add(new Coin(Content, width, height, 0, 0,
@@ -340,6 +344,7 @@ namespace Project
 
                     break;
                 case 4:
+                    //N
                     int Nx = width;
                     int Ny = rnd;
                     for (int i = 0; i < 3; i++)
@@ -373,6 +378,7 @@ namespace Project
                     }
                     break;
                 case 5:
+                    //rectangle
                     coinList.Add(new Coin(Content, width, height, 0, 0,
                                 new Rectangle(width, rnd + 55, 50, 50)));
                     for (int i = 0; i < 13; i++)
@@ -387,6 +393,7 @@ namespace Project
                                 new Rectangle(width + 770, rnd + 55, 50, 50)));
                     break;
                 case 6:
+                    //hana
                     int x6 = width;
                     int y6 = rnd;
                     //H

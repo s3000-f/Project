@@ -130,7 +130,7 @@ namespace Project
             isLocked = false;
             wasFired = true;   
             nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(2, 6));
-
+             
         }
 
         public int getBottom()

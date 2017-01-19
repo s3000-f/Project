@@ -153,10 +153,12 @@ namespace Project
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
 
             if (gameMode == 0)
+                //first menu
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
             }
             else if (gameMode == 1)
+                //playing
             {
                 Updater(gameTime);
                 if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
@@ -176,6 +178,7 @@ namespace Project
 
             }
             else if (gameMode == 2)
+                //pause
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
                 {
@@ -187,6 +190,7 @@ namespace Project
 
             }
             else if (gameMode == 3)
+                // barry dies
             {
                 soundEngineInstance.Pause();
                 isDead = true;
@@ -254,9 +258,9 @@ namespace Project
             #region lazer
             foreach (Lazer lazer in lazerList)
             {
-                if ((!lazer.isHit && lazer.isActive) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > lazer.position.Y && barry.getBottom() < lazer.getBottom())
-                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > lazer.position.Y && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
-                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > lazer.position.Y)))
+                if ((!lazer.isHit && lazer.isActive) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50) && barry.getBottom() < lazer.getBottom())
+                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y +50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
+                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50))))
                 {
                     score.writeHighScore();
                     //this.Exit();
