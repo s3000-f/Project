@@ -319,7 +319,7 @@ namespace Project
                     {
 
                         gameMode = 5;
-                        
+
                     }
                     r.X = 1620;
                     r.Width = 125;
@@ -594,7 +594,7 @@ namespace Project
         {
             GraphicsDevice.Clear(Color.Black);
 
-            if (gameMode != 0)
+            if (gameMode != 0 && gameMode != 4 && gameMode != 5)
             {
                 //Drawing Barry and Background
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
@@ -646,7 +646,7 @@ namespace Project
                 }
                 spriteBatch.End();
             }
-            else
+            else if (gameMode == 0)
             {
                 //r.Y = 915;
                 //r.X = 1445;  1705
@@ -673,22 +673,36 @@ namespace Project
                 if (!issfx) spriteBatch.Draw(Content.Load<Texture2D>("sfxpauseoff"), new Rectangle(1689, 35, 85, 85), Color.White);
                 spriteBatch.End();
             }
-            if (isDead)
+            else if(gameMode==3 && isDead)
+            {
+                
+                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                    spriteBatch.End();
+
+                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    score.drawDeadScore(spriteBatch, 400, 170, 60, 96);
+                    spriteBatch.End();
+
+                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    score.drawDeadCoin(spriteBatch, 640, 340, 25, 40, false);
+                    spriteBatch.End();
+
+                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32, true);
+                    spriteBatch.End();
+                
+            }
+            else if (gameMode == 4)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>("shop"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
-
+            }
+            else if (gameMode == 5)
+            {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                score.drawDeadScore(spriteBatch, 400, 170, 60, 96);
-                spriteBatch.End();
-
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                score.drawDeadCoin(spriteBatch, 640, 340, 25, 40, false);
-                spriteBatch.End();
-
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32, true);
+                spriteBatch.Draw(Content.Load<Texture2D>("highscore"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
             }
 
