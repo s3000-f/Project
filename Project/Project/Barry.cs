@@ -52,59 +52,58 @@ namespace Project
             else
                 moveBack();
 
-            bool b=false;
+            bool b = false;
             if (isGravityActive)
             {
-                if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
+                if (isDead)
                 {
-                    if ((position.Y == MaxY - 170) && !isDead) // this is for animating ground barry
-                    {
-                        walkDown(gameTime);
-                    }
-                    else if ((position.Y == 50) && !isDead) // this is for animating ground barry
-                    {
-
-                        walkUp(gameTime);
-                    }
-                    else if (isDead)/// CHANGE
-                    {
-                        isGravityActive = false;
-                        isDead = false;
-                    }
-                    
-                    if ((!isDead) 
-                        && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed) 
-                        && (oldMouseState.LeftButton == ButtonState.Released && oldState.IsKeyUp(Keys.Space) && oldState.IsKeyUp(Keys.Space)))// this is for shetab roo be bala , it should the key is down 
-                    {
-
-
-                        oldMouseState = Mouse.GetState();
-                        // this is for animating air barry
-                        gravity.Y = -gravity.Y;
-                        b = true;
-                    }
-                   
-                    
-                    
-                    if (recSpeed.Y > -15 && recSpeed.Y < 15)
-                    {
-                        recSpeed.Y -= gravity.Y;
-
-                    }
-                    position.Y -= (int)recSpeed.Y; // this will move barry with dar nazar gereftan recSpeedesh
+                    isDead = false;
+                    isGravityActive = false;
                 }
-                else if (position.Y < 50) //if barry hits the roof , this will make his speed 0 and will ajdust it's positionition
+                else
                 {
-                    position.Y = 50;
-                    recSpeed.Y = 0;
+
+                    if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
+                    {
+                        if (recSpeed.Y > -10) // this is the seed cap 
+                            recSpeed.Y -= gravity.Y;
+                        if (recSpeed.Y < 15) // this is the seed cap 
+                            recSpeed.Y += gravity.Y;
+                        if (position.Y == MaxY - 170) // this is for animating ground barry
+                            walkDown(gameTime);
+                        else if (position.Y == 50)
+                            walkUp(gameTime);
+                        if (Keyboard.GetState().IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                        {
+                            if (isRotationUp)
+                            {
+                                isRotationUp = false;
+
+                            }
+                            else
+                            {
+                                isRotationUp = true;
+                            }
+                        }
+                        if (!isRotationUp && position.Y < MaxY - 170)
+                            position.Y +=(int) recSpeed.Y;
+                        else if (isRotationUp && position.Y > 50)
+                            position.Y -=(int) recSpeed.Y;
+                    }
+                    else if (position.Y < 50) //if barry hits the roof , this will make his speed 0 and will ajdust it's positionition
+                    {
+                        position.Y = 50;
+                        recSpeed.Y = 0;
+                    }
+                    else if (position.Y > MaxY - 170) // if barry hits the ground, this will make his speed 0 and adjust it's positionition
+                    {
+                        position.Y = MaxY - 170;
+                        recSpeed.Y = 0;
+                    }
+                    oldState = Keyboard.GetState();
                 }
-                else if (position.Y > MaxY - 170) // if barry hits the ground, this will make his speed 0 and adjust it's positionition
-                {
-                    position.Y = MaxY - 170;
-                    recSpeed.Y = 0;
-                }
-                
-                   
+
+
             }
             else
             {
@@ -207,7 +206,7 @@ namespace Project
                     srcRect.X = 0;
                     return true;
                 }
-                    
+
                 else
                 {
                     srcRect.X += 104;
@@ -229,7 +228,7 @@ namespace Project
                     srcRect.X = 0;
                     return false;
                 }
-                    
+
                 else
                 {
                     srcRect.X += 104;

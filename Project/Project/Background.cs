@@ -14,7 +14,7 @@ namespace Project
     class Background : Moving
     {
         public static int speed = 10;
-        Texture2D backGround;
+        public Texture2D backGround;
         Vector2 recSpeed;
         Vector2 recAcc;
         ContentManager Content;
@@ -23,16 +23,28 @@ namespace Project
         {
 
             this.Content = content;
-            backGround = Content.Load<Texture2D>("back");
+            backGround = Content.Load<Texture2D>("background\\1");
         }
         public void move()
         {
             position.X -= speed;
         }
-        public void switchBack(int x)
+        private void load(int bgCounter)
         {
-            if (position.X + MaxX - 5 < 0)
+            Console.WriteLine("bg --> "+bgCounter);
+            backGround = Content.Load<Texture2D>("background\\" + bgCounter);
+            
+        }
+        public bool switchBack(int x,int count)
+        {
+            
+            if (position.X + backGround.Width < 0)
+            {
+                load(count);
                 position.X = x;
+                return true;
+            }
+            return false;
         }
 
         public void drawBackground(SpriteBatch spriteBatch)

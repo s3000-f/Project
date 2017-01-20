@@ -15,6 +15,7 @@ namespace Project
     public class Game1 : Microsoft.Xna.Framework.Game
     {
 
+        int bgCounter = 1;
         List<float> elapsedMissile;
         // List<float> elapsedZapper;
         float speedTime = 0;
@@ -44,6 +45,8 @@ namespace Project
         SuperSpeed superSpeed;
         PowerUp powerUp;
         List<Lazer> lazerList;
+        bool isMusic = true;
+        bool issfx = true;
 
         public Game1()
         {
@@ -156,6 +159,48 @@ namespace Project
             //first menu
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+                    Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    Rectangle r = new Rectangle(1365, 50, 530, 140);
+                    if (r.Contains(p))
+                    {
+
+                        gameMode = 1;
+                        isPause = false;
+                    }
+                    r.Y = 235;
+                    if (r.Contains(p))
+                    {
+
+                        this.Exit();
+                        
+                    }                    
+                    r.Y = 730;
+                    r.X = 1500;
+                    r.Width = 260;
+                    r.Height = 130;
+                    if (r.Contains(p))
+                    {
+
+                        this.Exit();
+                    }
+                    r.Y = 915;
+                    r.X = 1445;
+                    r.Width = 120;
+                    r.Height = 120;
+                    if (r.Contains(p))
+                    {
+                        //sound check
+                        this.Exit();
+                    }
+                    r.X = 1705;
+                    if (r.Contains(p))
+                    {
+                        //sound check
+                        this.Exit();
+                    }
+                }
             }
             else if (gameMode == 1)
             //playing
@@ -184,6 +229,51 @@ namespace Project
                 {
                     gameMode = 1;
                     isPause = false;
+                }
+                if(Mouse.GetState().LeftButton==ButtonState.Pressed)
+                {
+                    Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    Rectangle r = new Rectangle(710, 345, 415, 140);
+                    if (r.Contains(p))
+                    {
+                        
+                        gameMode = 1;
+                        isPause = false;
+                    }
+                    r.Y = 560;
+                    if (r.Contains(p))
+                    {
+
+                        gameMode = 1;
+                        isPause = false;
+                        startUp();
+                    }
+                    r.Y = 780;
+                    if (r.Contains(p))
+                    {
+
+                        gameMode = 3;
+                        barry.isDead = true;
+                        isDead=true;
+                        isPause = false;
+                    }
+                    r.X = 1685;
+                    r.Y = 45;
+                    r.Width = r.Height = 130;
+                    if (r.Contains(p))
+                    {
+                        this.Exit();
+
+                        gameMode = 0;
+                        isPause = false;
+                    }
+                    r.X = 1810;
+                    if (r.Contains(p))
+                    {
+                        this.Exit();
+                        gameMode = 0;
+                        isPause = false;
+                    }
                 }
                 //Stop Background Music
                 soundEngineInstance.Pause();
@@ -258,15 +348,15 @@ namespace Project
             #region lazer
             foreach (Lazer lazer in lazerList)
             {
-                if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50) && barry.getBottom() < lazer.getBottom())
-                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y + 50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
-                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50))))
-                {
-                    score.writeHighScore();
-                    //this.Exit();
-                    lazer.isHit = true;
-                    barry.isDead = true;
-                }
+                //if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50) && barry.getBottom() < lazer.getBottom())
+                //                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y + 50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
+                //                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50))))
+                //{
+                //    score.writeHighScore();
+                //    //this.Exit();
+                //    lazer.isHit = true;
+                //    barry.isDead = true;
+                //}
 
             }
             #endregion
@@ -300,20 +390,20 @@ namespace Project
 
             #region missile
             //Missile Hit Check
-            foreach (Missile missile in missileList)
-            {
-                if ((!superSpeed.isActivated) && (!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
-                                    || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
-                                    || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
-                {
-                    missile.collision();
-                    score.writeHighScore();
-                    //this.Exit();
+            //foreach (Missile missile in missileList)
+            //{
+            //    if ((!superSpeed.isActivated) && (!missile.isHit) && ((barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y && barry.getBottom() < missile.getBottom())
+            //                        || (barry.getRight() > missile.position.X && barry.getBottom() > missile.position.Y && barry.position.Y < missile.getBottom() && barry.position.X < missile.getRight())
+            //                        || (barry.position.Y < missile.getBottom() && barry.position.X > missile.position.X && barry.position.X < missile.getRight() && barry.getBottom() > missile.position.Y)))
+            //    {
+            //        missile.collision();
+            //        score.writeHighScore();
+            //        //this.Exit();
 
-                    barry.isDead = true;
-                }
+            //        barry.isDead = true;
+            //    }
 
-            }
+            //}
             foreach (Missile missile in missileList)
             {
                 missile.move(gameTime);
@@ -351,34 +441,34 @@ namespace Project
                 new Rectangle((int)barry.position.X, (int)barry.position.Y,
                 barry.position.Width, barry.position.Height);
 
-            foreach (Zapper zapper in zapperList)
-            {
-                Matrix zapperTransform =
-                   Matrix.CreateTranslation(new Vector3(-new Vector2(zapper.position.Width / 2, zapper.position.Height / 2), 0.0f)) *
-                   // Matrix.CreateScale(block.Scale) *  would go here
-                   Matrix.CreateRotationZ(zapper.getRotation()) *
-                   Matrix.CreateTranslation(new Vector3(new Vector2(zapper.position.X, zapper.position.Y), 0.0f));
-                Rectangle zapperRectangle = Collision.CalculateBoundingRectangle(
-                             new Rectangle(0, 0, zapper.position.Width, zapper.position.Height),
-                             zapperTransform);
-                //Zapper Hit Check
-                if (barryRectangle.Intersects(zapperRectangle))
-                {
-                    // Check collision with person
-                    if ((!superSpeed.isActivated && !zapper.isHit) && (!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
-                                        barry.position.Height, barryTextureData,
-                                        zapperTransform, zapper.position.Width,
-                                        zapper.position.Height, zapperTextureData))
-                    {
-                        score.writeHighScore();
-                        zapper.isHit = true;
-                        barry.isDead = true;
+            //foreach (Zapper zapper in zapperList)
+            //{
+            //    Matrix zapperTransform =
+            //       Matrix.CreateTranslation(new Vector3(-new Vector2(zapper.position.Width / 2, zapper.position.Height / 2), 0.0f)) *
+            //       // Matrix.CreateScale(block.Scale) *  would go here
+            //       Matrix.CreateRotationZ(zapper.getRotation()) *
+            //       Matrix.CreateTranslation(new Vector3(new Vector2(zapper.position.X, zapper.position.Y), 0.0f));
+            //    Rectangle zapperRectangle = Collision.CalculateBoundingRectangle(
+            //                 new Rectangle(0, 0, zapper.position.Width, zapper.position.Height),
+            //                 zapperTransform);
+            //    //Zapper Hit Check
+            //    if (barryRectangle.Intersects(zapperRectangle))
+            //    {
+            //        // Check collision with person
+            //        if ((!superSpeed.isActivated )&&( !zapper.isHit) && (!barry.isDead) && Collision.IntersectPixels(barryTransform, barry.position.Width,
+            //                            barry.position.Height, barryTextureData,
+            //                            zapperTransform, zapper.position.Width,
+            //                            zapper.position.Height, zapperTextureData))
+            //        {
+            //            score.writeHighScore();
+            //            zapper.isHit = true;
+            //            barry.isDead = true;
 
 
-                        //this.Exit();
-                    }
-                }
-            }
+            //            //this.Exit();
+            //        }
+            //    }
+            //}
             foreach (Zapper z in zapperList)
             {
                 z.screenZap(gameTime);
@@ -397,14 +487,14 @@ namespace Project
             #endregion
 
             #region superspeed
-            if ((!superSpeed.isActivated) && ((barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y && barry.getBottom() < superSpeed.getBottom())
-                                    || (barry.getRight() > superSpeed.position.X && barry.getBottom() > superSpeed.position.Y && barry.position.Y < superSpeed.getBottom() && barry.position.X < superSpeed.getRight())
-                                    || (barry.position.Y < superSpeed.getBottom() && barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y)))
-            {
-                superSpeed.collide();
-                superSpeed.regenerate(gameTime);
-                speedTime = (float)gameTime.TotalGameTime.TotalSeconds;
-            }
+            //if ((!superSpeed.isActivated) && ((barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y && barry.getBottom() < superSpeed.getBottom())
+            //                        || (barry.getRight() > superSpeed.position.X && barry.getBottom() > superSpeed.position.Y && barry.position.Y < superSpeed.getBottom() && barry.position.X < superSpeed.getRight())
+            //                        || (barry.position.Y < superSpeed.getBottom() && barry.position.X > superSpeed.position.X && barry.position.X < superSpeed.getRight() && barry.getBottom() > superSpeed.position.Y)))
+            //{
+            //    superSpeed.collide();
+            //    superSpeed.regenerate(gameTime);
+            //    speedTime = (float)gameTime.TotalGameTime.TotalSeconds;
+            //}
             if (superSpeed.isActivated && speedTime + 3 < (float)gameTime.TotalGameTime.TotalSeconds) superSpeed.isActivated = false;
             if (superSpeed.nextGen < gameTime.TotalGameTime.TotalSeconds && !superSpeed.isLeft())
             {
@@ -416,19 +506,20 @@ namespace Project
             }
             #endregion
 
-            if ((!superSpeed.isActivated) && ((barry.position.X > powerUp.position.X && barry.position.X < powerUp.getRight() && barry.getBottom() > (powerUp.position.Y + 50) && barry.getBottom() < powerUp.getBottom())
-                                   || (barry.getRight() > powerUp.position.X && barry.getBottom() > (powerUp.position.Y + 50) && barry.position.Y < powerUp.getBottom() && barry.position.X < powerUp.getRight())
-                                   || (barry.position.Y < powerUp.getBottom() && barry.position.X > powerUp.position.X && barry.position.X < powerUp.getRight() && barry.getBottom() > (powerUp.position.Y + 50))))
-            {
-                powerUp.regenerate(gameTime);
-                barry.isGravityActive = true;
-            }
+            //if ((!superSpeed.isActivated) && ((barry.position.X > powerUp.position.X && barry.position.X < powerUp.getRight() && barry.getBottom() > (powerUp.position.Y + 50) && barry.getBottom() < powerUp.getBottom())
+            //                       || (barry.getRight() > powerUp.position.X && barry.getBottom() > (powerUp.position.Y + 50) && barry.position.Y < powerUp.getBottom() && barry.position.X < powerUp.getRight())
+            //                       || (barry.position.Y < powerUp.getBottom() && barry.position.X > powerUp.position.X && barry.position.X < powerUp.getRight() && barry.getBottom() > (powerUp.position.Y + 50))))
+            //{
+            //    powerUp.regenerate(gameTime);
+            //    barry.isGravityActive = true;
+            //}
             if (powerUp.isLeft()) powerUp.regenerate(gameTime);
             powerUp.move(gameTime);
             background.move();
-            background.switchBack(background2.position.X + background2.position.Width);
+            if (bgCounter > 18) bgCounter = 1;
+            if (background.switchBack(background2.position.X + background2.backGround.Width, bgCounter)) bgCounter++;
             background2.move();
-            background2.switchBack(background.position.X + background.position.Width);
+            if (background2.switchBack(background.position.X + background.backGround.Width, bgCounter)) bgCounter++;
         }
 
 
@@ -492,14 +583,15 @@ namespace Project
             else
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                spriteBatch.Draw(Content.Load<Texture2D>("Menu\\home"), Vector2.Zero, Color.White);
-                spriteBatch.End(); 
+                spriteBatch.Draw(Content.Load<Texture2D>("Menu\\home"), new Rectangle(0,0,1920,1080), Color.White);
+                spriteBatch.End();
             }
             if (isPause)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 spriteBatch.Draw(pause, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.Draw(Content.Load<Texture2D>("pauseAlpha"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                
                 spriteBatch.End();
             }
             if (isDead)
@@ -513,11 +605,11 @@ namespace Project
                 spriteBatch.End();
 
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                score.drawDeadCoin(spriteBatch, 640, 340, 25, 40,false);
+                score.drawDeadCoin(spriteBatch, 640, 340, 25, 40, false);
                 spriteBatch.End();
-  
+
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32,true);
+                score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32, true);
                 spriteBatch.End();
             }
 
