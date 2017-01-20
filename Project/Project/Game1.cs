@@ -47,7 +47,6 @@ namespace Project
         List<Lazer> lazerList;
         bool isMusic = true;
         bool issfx = true;
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -101,10 +100,13 @@ namespace Project
                 new Rectangle(graphics.GraphicsDevice.Viewport.Width, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height));
 
             //Loading Music
-            myMusic = Content.Load<SoundEffect>("music");
-            soundEngineInstance = myMusic.CreateInstance();
-            soundEngineInstance.Volume = 0.5f;
-            soundEngineInstance.IsLooped = true;
+            if (isMusic)
+            {
+                myMusic = Content.Load<SoundEffect>("music");
+                soundEngineInstance = myMusic.CreateInstance();
+                soundEngineInstance.Volume = 0.5f;
+                soundEngineInstance.IsLooped = true;
+            }
 
             //Loading Coins
             int rnd3 = rnd.Next(0, graphics.GraphicsDevice.Viewport.Height - 100);
@@ -151,6 +153,7 @@ namespace Project
         }
 
         KeyboardState oldState;
+        MouseState oldMouseState;
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
@@ -159,7 +162,7 @@ namespace Project
             //first menu
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
                 {
                     Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
                     Rectangle r = new Rectangle(1365, 50, 530, 140);
@@ -174,8 +177,8 @@ namespace Project
                     {
 
                         this.Exit();
-                        
-                    }                    
+
+                    }
                     r.Y = 730;
                     r.X = 1500;
                     r.Width = 260;
@@ -192,13 +195,28 @@ namespace Project
                     if (r.Contains(p))
                     {
                         //sound check
-                        this.Exit();
+                        if (isMusic)
+                        {
+                            isMusic = false;
+
+                        }
+                        else
+                        {
+                            isMusic = true;
+                        }
                     }
                     r.X = 1705;
                     if (r.Contains(p))
                     {
                         //sound check
-                        this.Exit();
+                        if (issfx)
+                        {
+                            issfx = false;
+                        }
+                        else
+                        {
+                            issfx = true;
+                        }
                     }
                 }
             }
@@ -214,13 +232,12 @@ namespace Project
                 //Play Background Music
                 if (soundEngineInstance.State == SoundState.Stopped)
                 {
-
-                    soundEngineInstance.Play();
+                    if (isMusic)
+                        soundEngineInstance.Play();
                 }
                 else
+                    if (isMusic)
                     soundEngineInstance.Resume();
-
-
             }
             else if (gameMode == 2)
             //pause
@@ -230,13 +247,13 @@ namespace Project
                     gameMode = 1;
                     isPause = false;
                 }
-                if(Mouse.GetState().LeftButton==ButtonState.Pressed)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
                 {
                     Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
                     Rectangle r = new Rectangle(710, 345, 415, 140);
                     if (r.Contains(p))
                     {
-                        
+
                         gameMode = 1;
                         isPause = false;
                     }
@@ -254,25 +271,35 @@ namespace Project
 
                         gameMode = 3;
                         barry.isDead = true;
-                        isDead=true;
+                        isDead = true;
                         isPause = false;
                     }
                     r.X = 1685;
                     r.Y = 45;
-                    r.Width = r.Height = 130;
+                    r.Width = r.Height = 85;
                     if (r.Contains(p))
                     {
-                        this.Exit();
-
-                        gameMode = 0;
-                        isPause = false;
+                        if (issfx)
+                        {
+                            issfx = false;
+                        }
+                        else
+                        {
+                            issfx = true;
+                        }
                     }
                     r.X = 1810;
                     if (r.Contains(p))
                     {
-                        this.Exit();
-                        gameMode = 0;
-                        isPause = false;
+                        if (isMusic)
+                        {
+                            isMusic = false;
+
+                        }
+                        else
+                        {
+                            isMusic = true;
+                        }
                     }
                 }
                 //Stop Background Music
@@ -284,16 +311,55 @@ namespace Project
             {
                 soundEngineInstance.Pause();
                 isDead = true;
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
                 {
-                    isDead = false;
-                    gameMode = 1;
-                    startUp();
+                    Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    Rectangle r = new Rectangle(1280, 460, 300, 270);
+                    if (r.Contains(p))
+                    {
+
+                        gameMode = 5;
+                        
+                    }
+                    r.X = 1620;
+                    r.Width = 125;
+                    r.Height = 115;
+                    if (r.Contains(p))
+                    {
+
+                        gameMode = 4;
+                    }
+                    r.Y = 620;
+                    if (r.Contains(p))
+                    {
+                        isDead = false;
+                        gameMode = 0;
+
+                    }
+                    r.X = 1120;
+                    r.Y = 770;
+                    r.Width = 770;
+                    r.Height = 275;
+                    if (r.Contains(p))
+                    {
+
+                        gameMode = 1;
+                        isDead = false;
+                        startUp();
+                    }
+                }
+                else if (gameMode == 4)
+                {
+
+                }
+                else if (gameMode == 5)
+                {
+
                 }
 
             }
             oldState = Keyboard.GetState();
-
+            oldMouseState = Mouse.GetState();
             base.Update(gameTime);
         }
         public void Updater(GameTime gameTime)
@@ -330,7 +396,7 @@ namespace Project
                                     || (barry.getRight() > coin.position.X && barry.getBottom() > coin.position.Y && barry.position.Y < coin.getBottom() && barry.position.X < coin.getRight())
                                     || (barry.position.Y < coin.getBottom() && barry.position.X > coin.position.X && barry.position.X < coin.getRight() && barry.getBottom() > coin.position.Y)))
                 {
-                    coin.collision();
+                    coin.collision(issfx);
                     score.gotCoins();
                 }
 
@@ -348,15 +414,15 @@ namespace Project
             #region lazer
             foreach (Lazer lazer in lazerList)
             {
-                //if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50) && barry.getBottom() < lazer.getBottom())
-                //                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y + 50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
-                //                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50))))
-                //{
-                //    score.writeHighScore();
-                //    //this.Exit();
-                //    lazer.isHit = true;
-                //    barry.isDead = true;
-                //}
+                if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50) && barry.getBottom() < lazer.getBottom())
+                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y + 50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
+                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50))))
+                {
+                    score.writeHighScore();
+                    //this.Exit();
+                    lazer.isHit = true;
+                    barry.isDead = true;
+                }
 
             }
             #endregion
@@ -582,16 +648,29 @@ namespace Project
             }
             else
             {
+                //r.Y = 915;
+                //r.X = 1445;  1705
+                //r.Width = 120;
+                //r.Height = 120;
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                spriteBatch.Draw(Content.Load<Texture2D>("Menu\\home"), new Rectangle(0,0,1920,1080), Color.White);
+                if (!isMusic) spriteBatch.Draw(Content.Load<Texture2D>("soundPauseOff"), new Rectangle(1445, 915, 120, 120), Color.White);
+                if (!issfx) spriteBatch.Draw(Content.Load<Texture2D>("sfxpauseoff"), new Rectangle(1705, 915, 120, 120), Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>("Menu\\home"), new Rectangle(0, 0, 1920, 1080), Color.White);
+
                 spriteBatch.End();
             }
             if (isPause)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+
                 spriteBatch.Draw(pause, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.Draw(Content.Load<Texture2D>("pauseAlpha"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
-                
+
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                if (!isMusic) spriteBatch.Draw(Content.Load<Texture2D>("soundPauseOff"), new Rectangle(1812, 35, 85, 85), Color.White);
+                if (!issfx) spriteBatch.Draw(Content.Load<Texture2D>("sfxpauseoff"), new Rectangle(1689, 35, 85, 85), Color.White);
                 spriteBatch.End();
             }
             if (isDead)

@@ -47,14 +47,18 @@ namespace Project
             if (position.X + MaxX < 0)
                 position.X = MaxX;
         }
-        public void collision()
+        public void collision(bool issfx)
         {
             //Collision Sound
-            collisSound = Content.Load<SoundEffect>("coinSound");
-            se_Instance = collisSound.CreateInstance();
-            se_Instance.Volume = 0.75f;
-            se_Instance.IsLooped = false;
-            se_Instance.Play();
+            if(issfx)
+            {
+                collisSound = Content.Load<SoundEffect>("coinSound");
+                se_Instance = collisSound.CreateInstance();
+                se_Instance.Volume = 0.75f;
+                se_Instance.IsLooped = false;
+                se_Instance.Play();
+            }
+            
 
             //Collision Flag
             isHit = true;
