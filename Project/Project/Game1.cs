@@ -170,13 +170,13 @@ namespace Project
                     {
 
                         gameMode = 1;
-                        isPause = false;
+                        startUp();
                     }
                     r.Y = 235;
                     if (r.Contains(p))
                     {
 
-                        this.Exit();
+                        gameMode = 4;
 
                     }
                     r.Y = 730;
@@ -348,16 +348,52 @@ namespace Project
                         startUp();
                     }
                 }
-                else if (gameMode == 4)
-                {
-
-                }
-                else if (gameMode == 5)
-                {
-
-                }
-
             }
+            else if (gameMode == 4)
+            {
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+                {
+                    Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    Rectangle r = new Rectangle(10, 0, 200, 110);
+                    if (r.Contains(p))
+                    {
+
+                        if (!isDead)
+                        {
+                            gameMode = 0;
+                        }
+                        else
+                        {
+                            gameMode = 3;
+                        }
+
+                    }
+                }
+            }
+            else if (gameMode == 5)
+            {
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+                {
+                    Point p = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    Rectangle r = new Rectangle(10, 0, 200, 110);
+                    if (r.Contains(p))
+                    {
+
+                        if (!isDead)
+                        {
+                            gameMode = 0;
+                        }
+                        else
+                        {
+                            gameMode = 3;
+                        }
+
+                    }
+                }
+            }
+
+
+
             oldState = Keyboard.GetState();
             oldMouseState = Mouse.GetState();
             base.Update(gameTime);
@@ -673,36 +709,36 @@ namespace Project
                 if (!issfx) spriteBatch.Draw(Content.Load<Texture2D>("sfxpauseoff"), new Rectangle(1689, 35, 85, 85), Color.White);
                 spriteBatch.End();
             }
-            else if(gameMode==3 && isDead)
+            else if (gameMode == 3 && isDead)
             {
-                
-                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                    spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
-                    spriteBatch.End();
 
-                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                    score.drawDeadScore(spriteBatch, 400, 170, 60, 96);
-                    spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.End();
 
-                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                    score.drawDeadCoin(spriteBatch, 640, 340, 25, 40, false);
-                    spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawDeadScore(spriteBatch, 400, 170, 60, 96);
+                spriteBatch.End();
 
-                    spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                    score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32, true);
-                    spriteBatch.End();
-                
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawDeadCoin(spriteBatch, 640, 340, 25, 40, false);
+                spriteBatch.End();
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32, true);
+                spriteBatch.End();
+
             }
             else if (gameMode == 4)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                spriteBatch.Draw(Content.Load<Texture2D>("shop"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>("highscore"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
             }
             else if (gameMode == 5)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                spriteBatch.Draw(Content.Load<Texture2D>("highscore"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(Content.Load<Texture2D>("shop"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
             }
 
