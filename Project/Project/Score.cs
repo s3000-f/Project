@@ -180,11 +180,105 @@ namespace Project
             spriteBatch.Draw(coinSign, new Rectangle(20 + i * 17, 80, 24, 24), Color.White);
         }
 
-        public void drawDeadScore(SpriteBatch spritebatch)
+        public void drawDeadScore(SpriteBatch spriteBatch,int x,int y,int w,int h)
         {
-
+            
+            char[] metr = meters.ToString().ToCharArray();
+            int i = 0;
+            while (i < metr.Length)
+            {
+                switch (metr[i])
+                {
+                    case '0':
+                        spriteBatch.Draw(digitsCoin[0], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '1':
+                        spriteBatch.Draw(digitsCoin[1], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '2':
+                        spriteBatch.Draw(digitsCoin[2], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '3':
+                        spriteBatch.Draw(digitsCoin[3], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '4':
+                        spriteBatch.Draw(digitsCoin[4], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '5':
+                        spriteBatch.Draw(digitsCoin[5], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '6':
+                        spriteBatch.Draw(digitsCoin[6], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '7':
+                        spriteBatch.Draw(digitsCoin[7], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '8':
+                        spriteBatch.Draw(digitsCoin[8], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                    case '9':
+                        spriteBatch.Draw(digitsCoin[9], new Rectangle(x + i * (w+3), y, w, h), Color.White);
+                        break;
+                }
+                i++;
+            }
+            spriteBatch.Draw(mSign, new Rectangle(x + i * (w + 3), y, w, h), Color.White);
         }
-
+        public void drawDeadCoin(SpriteBatch spriteBatch, int x, int y, int w, int h, bool isAll)
+        {
+            int coins = 0,k=3;
+            if (isAll)
+            {
+                coins = allCoins + takenCoins;
+                k = 1;
+            }
+            else
+            {
+                k = 1;
+                coins = takenCoins;
+            }
+                char[] coin = coins.ToString().ToCharArray();
+                int i = 0;
+                while (i < coin.Length)
+                {
+                    switch (coin[i])
+                    {
+                        case '0':
+                            spriteBatch.Draw(digitsCoin[0], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '1':
+                            spriteBatch.Draw(digitsCoin[1], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '2':
+                            spriteBatch.Draw(digitsCoin[2], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '3':
+                            spriteBatch.Draw(digitsCoin[3], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '4':
+                            spriteBatch.Draw(digitsCoin[4], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '5':
+                            spriteBatch.Draw(digitsCoin[5], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '6':
+                            spriteBatch.Draw(digitsCoin[6], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '7':
+                            spriteBatch.Draw(digitsCoin[7], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '8':
+                            spriteBatch.Draw(digitsCoin[8], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                        case '9':
+                            spriteBatch.Draw(digitsCoin[9], new Rectangle(x + i * (w+k), y, w, h), Color.White);
+                            break;
+                    }
+                    i++;
+                }
+                spriteBatch.Draw(coinSign, new Rectangle(x + i * (w+k), y, w, h), Color.White);
+            
+        }
 
     }
 }

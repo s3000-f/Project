@@ -153,12 +153,12 @@ namespace Project
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) this.Exit();
 
             if (gameMode == 0)
-                //first menu
+            //first menu
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Space)) gameMode = 1;
             }
             else if (gameMode == 1)
-                //playing
+            //playing
             {
                 Updater(gameTime);
                 if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
@@ -178,7 +178,7 @@ namespace Project
 
             }
             else if (gameMode == 2)
-                //pause
+            //pause
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
                 {
@@ -190,7 +190,7 @@ namespace Project
 
             }
             else if (gameMode == 3)
-                // barry dies
+            // barry dies
             {
                 soundEngineInstance.Pause();
                 isDead = true;
@@ -258,9 +258,9 @@ namespace Project
             #region lazer
             foreach (Lazer lazer in lazerList)
             {
-                if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50) && barry.getBottom() < lazer.getBottom())
-                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y +50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
-                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y +50))))
+                if ((!lazer.isHit && lazer.isActive && !superSpeed.isActivated) && ((barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50) && barry.getBottom() < lazer.getBottom())
+                                    || (barry.getRight() > lazer.position.X && barry.getBottom() > (lazer.position.Y + 50) && barry.position.Y < lazer.getBottom() && barry.position.X < lazer.getRight())
+                                    || (barry.position.Y < lazer.getBottom() && barry.position.X > lazer.position.X && barry.position.X < lazer.getRight() && barry.getBottom() > (lazer.position.Y + 50))))
                 {
                     score.writeHighScore();
                     //this.Exit();
@@ -274,7 +274,7 @@ namespace Project
             gameMode = barry.die();
 
             //Score Calculation
-            score.run(gameTime,superSpeed.isActivated);
+            score.run(gameTime, superSpeed.isActivated);
 
 
             //Barry Movement
@@ -286,12 +286,12 @@ namespace Project
             {
                 foreach (Lazer lazer in lazerList)
                     lazer.turnOn(gameTime);
-                foreach (Zapper zapper in zapperList) 
-                    if(zapper.isLeft() || zapper.isRight()) zapper.regenerate(gameTime);
+                foreach (Zapper zapper in zapperList)
+                    if (zapper.isLeft() || zapper.isRight()) zapper.regenerate(gameTime);
                 foreach (Missile missile in missileList)
                     if (missile.isLeft() || missile.isRight()) missile.regenerate(gameTime);
             }
-                
+
             if (!lazerList[lazerList.Count - 1].isActive && lazerList[lazerList.Count - 1].isDown && lazerList[lazerList.Count - 1].position.Y == 0)
             {
                 lazerNextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)rnd.Next(7, 15);
@@ -436,56 +436,65 @@ namespace Project
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            //Drawing Barry and Background
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            barry.drawBarry(spriteBatch);
 
-            background.drawBackground(spriteBatch);
-            background2.drawBackground(spriteBatch);
-            spriteBatch.End();
-
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            powerUp.drawPowerUp(spriteBatch);
-            spriteBatch.End();
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            superSpeed.drawSuperSpeed(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Zapper zapper in zapperList)
-                zapper.drawZapper(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Missile missile in missileList)
-                missile.drawMissile(spriteBatch);
-            spriteBatch.End();
-
-            //Taken Coins
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            score.drawCoinScore(spriteBatch);
-            spriteBatch.End();
-
-            ////Passed distance
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            score.drawScore(spriteBatch);
-            spriteBatch.End();
-
-            //Drawing Lazers
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Lazer lazer in lazerList)
-                lazer.drawLazer(spriteBatch);
-            spriteBatch.End();
-
-            //Drawing coins
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (Coin coin in coinList)
+            if (gameMode != 0)
             {
-                if (!coin.isHit)
-                    coin.drawCoin(spriteBatch);
-            }
-            spriteBatch.End();
+                //Drawing Barry and Background
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                barry.drawBarry(spriteBatch);
 
+                background.drawBackground(spriteBatch);
+                background2.drawBackground(spriteBatch);
+                spriteBatch.End();
+
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                powerUp.drawPowerUp(spriteBatch);
+                spriteBatch.End();
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                superSpeed.drawSuperSpeed(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                foreach (Zapper zapper in zapperList)
+                    zapper.drawZapper(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                foreach (Missile missile in missileList)
+                    missile.drawMissile(spriteBatch);
+                spriteBatch.End();
+
+                //Taken Coins
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawCoinScore(spriteBatch);
+                spriteBatch.End();
+
+                ////Passed distance
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawScore(spriteBatch);
+                spriteBatch.End();
+
+                //Drawing Lazers
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                foreach (Lazer lazer in lazerList)
+                    lazer.drawLazer(spriteBatch);
+                spriteBatch.End();
+
+                //Drawing coins
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                foreach (Coin coin in coinList)
+                {
+                    if (!coin.isHit)
+                        coin.drawCoin(spriteBatch);
+                }
+                spriteBatch.End();
+            }
+            else
+            {
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                spriteBatch.Draw(Content.Load<Texture2D>("Menu\\home"), Vector2.Zero, Color.White);
+                spriteBatch.End(); 
+            }
             if (isPause)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
@@ -497,6 +506,18 @@ namespace Project
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.End();
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawDeadScore(spriteBatch, 400, 170, 60, 96);
+                spriteBatch.End();
+
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawDeadCoin(spriteBatch, 640, 340, 25, 40,false);
+                spriteBatch.End();
+  
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawDeadCoin(spriteBatch, 1380, 670, 20, 32,true);
                 spriteBatch.End();
             }
 
