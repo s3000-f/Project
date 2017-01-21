@@ -15,7 +15,7 @@ namespace Project
     {
         float elapsed;
         public float nextGen = 0;
-        public bool isHit = false, isLoading = true, isLocked = false, wasFired=false;
+        public bool isHit = false, isLoading = true, isLocked = false, wasFired = false;
         const float delay = 50f;
         int frame;
         Random rnd;
@@ -45,7 +45,7 @@ namespace Project
                 wasFired = false;
                 position.X -= 100;
             }
-                
+
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsed > 300f)
             {
@@ -128,7 +128,7 @@ namespace Project
         }
         public int getRight()
         {
-            return position.X + position.Width-100;
+            return position.X + position.Width - 100;
         }
         public override bool isLeft()
         {
@@ -138,15 +138,19 @@ namespace Project
         }
         public void regenerate(GameTime gameTime)
         {
+            
+            elapsedLock = 0;
+            elapsedFire = 0;
             position.X = MaxX;
             position.Y = rnd.Next(50, MaxY - 170);
             position.Width = 100;
             position.Height = 100;
             isLoading = true;
             isLocked = false;
-            wasFired = true;   
+            wasFired = true;
+            isHit = false;
             nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(2, 6));
-             
+
         }
 
         public int getBottom()
