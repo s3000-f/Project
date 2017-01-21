@@ -33,11 +33,11 @@ namespace Project
         {
             position.X -= Background.speed;
             elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if(elapsed>600f)
+            if (elapsed > 600f)
             {
                 elapsed = 0;
             }
-            else 
+            else
             {
                 if (elapsed % 600 > 300)
                 {
@@ -59,7 +59,7 @@ namespace Project
         }
         public void regenerate(GameTime gameTime)
         {
-            position.X = MaxX;
+            position.X = MaxX + 20;
             position.Y = rnd.Next(50, MaxY - 170);
             nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(7, 16));
 

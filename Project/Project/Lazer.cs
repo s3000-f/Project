@@ -47,6 +47,26 @@ namespace Project
             nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(7, 15));
 
         }
+        SoundEffect collisSound;
+        SoundEffectInstance se_Instance;
+
+        public void collision(bool issfx)
+        {
+            //Collision Sound
+            if (issfx)
+            {
+                collisSound = Content.Load<SoundEffect>("laserfire");
+                se_Instance = collisSound.CreateInstance();
+                se_Instance.Volume = 0.75f;
+                se_Instance.IsLooped = false;
+                se_Instance.Play();
+            }
+
+
+            //Collision Flag
+            isHit = true;
+
+        }
         public void turnOn(GameTime gameTime)
         {
             if (position.Y == y && !isDown)

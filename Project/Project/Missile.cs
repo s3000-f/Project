@@ -106,9 +106,25 @@ namespace Project
                 srcRect.X = frame * 250;
             }
         }
-        public void collision()
+        SoundEffect collisSound;
+        SoundEffectInstance se_Instance;
+
+        public void collision(bool issfx)
         {
+            //Collision Sound
+            if (issfx)
+            {
+                collisSound = Content.Load<SoundEffect>("zap");
+                se_Instance = collisSound.CreateInstance();
+                se_Instance.Volume = 0.75f;
+                se_Instance.IsLooped = false;
+                se_Instance.Play();
+            }
+
+
+            //Collision Flag
             isHit = true;
+
         }
         public int getRight()
         {

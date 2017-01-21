@@ -29,7 +29,7 @@ namespace Project
 
         public Zapper(ContentManager Content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
-            rnd=new Random();
+            rnd = new Random();
             this.Content = Content;
             this.zapper = Content.Load<Texture2D>("zappers");
             zapperOverlay = Content.Load<Texture2D>("zapped00");
@@ -75,10 +75,11 @@ namespace Project
         }
         public void regenerate(GameTime gameTime)
         {
-            position.X = MaxX+200;
+            isHit = false;
+            position.X = MaxX + 200;
             position.Y = rnd.Next(50, MaxY - 170);
-            int i=rnd.Next(0,3);
-            switch(i)
+            int i = rnd.Next(0, 3);
+            switch (i)
             {
                 case 0:
                     rotation = 0;
@@ -96,6 +97,28 @@ namespace Project
             nextGen = (float)gameTime.TotalGameTime.TotalSeconds + (float)(rnd.Next(1, 5));
 
         }
+
+        SoundEffect collisSound;
+        SoundEffectInstance se_Instance;
+
+        public void collision(bool issfx)
+        {
+            //Collision Sound
+            if (issfx)
+            {
+                collisSound = Content.Load<SoundEffect>("zap");
+                se_Instance = collisSound.CreateInstance();
+                se_Instance.Volume = 0.75f;
+                se_Instance.IsLooped = false;
+                se_Instance.Play();
+            }
+
+
+            //Collision Flag
+            isHit = true;
+
+        }
+
         public Color[] getTextureData()
         {
             Color[] c = new Color[zapper.Width * zapper.Height];
@@ -104,18 +127,18 @@ namespace Project
         }
         public void screenZap(GameTime gameTime)
         {
-            if(isHit)
+            if (isHit)
             {
-                if(elapsedOverlay>100f)
+                if (elapsedOverlay > 100f)
                 {
                     zapperOverlay = Content.Load<Texture2D>("zapped00");
                 }
-                else if(elapsedOverlay>70f)
+                else if (elapsedOverlay > 70f)
                 {
                     elapsedOverlay += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     zapperOverlay = Content.Load<Texture2D>("zapped50");
                 }
-                else if(elapsedOverlay>35f)
+                else if (elapsedOverlay > 35f)
                 {
                     elapsedOverlay += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     zapperOverlay = Content.Load<Texture2D>("zapped70");

@@ -15,6 +15,8 @@ namespace Project
     {
         Texture2D barry;
         public bool isGravityActive = false;
+        bool b = true;//mozakhrafe jahat e shetab dar gravity
+        bool c = true;//mozakhrafe jahat e soraate dar gravity
         bool isRotationUp = false;
         float elapsedDeath;
         public bool isDead = false;
@@ -32,7 +34,6 @@ namespace Project
         MouseState oldMouseState;
         public Barry(ContentManager content, int MaxX, int MaxY, int MinX, int MinY, Rectangle position) : base(MaxX, MaxY, MinX, MinY, position)
         {
-
             this.Content = content;
             oldState = Keyboard.GetState();
             oldMouseState = Mouse.GetState();
@@ -52,9 +53,9 @@ namespace Project
             else
                 moveBack();
 
-            bool b = false;
             if (isGravityActive)
             {
+
                 if (isDead)
                 {
                     isDead = false;
@@ -65,30 +66,29 @@ namespace Project
 
                     if (position.Y >= 50 && position.Y <= MaxY - 170) // this big if is for when exactly shetab and gravity should occur
                     {
-                        if (recSpeed.Y > -10) // this is the seed cap 
-                            recSpeed.Y -= gravity.Y;
-                        if (recSpeed.Y < 15) // this is the seed cap 
-                            recSpeed.Y += gravity.Y;
+
+
                         if (position.Y == MaxY - 170) // this is for animating ground barry
                             walkDown(gameTime);
                         else if (position.Y == 50)
                             walkUp(gameTime);
-                        if (Keyboard.GetState().IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                        if ((Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().LeftButton == ButtonState.Pressed) && (oldState.IsKeyUp(Keys.Space) && oldState.IsKeyUp(Keys.Up) && oldMouseState.LeftButton == ButtonState.Released))
                         {
                             if (isRotationUp)
                             {
                                 isRotationUp = false;
-
+                                walkUp(gameTime);
                             }
                             else
                             {
                                 isRotationUp = true;
+                                walkDown(gameTime);
                             }
                         }
                         if (!isRotationUp && position.Y < MaxY - 170)
-                            position.Y +=(int) recSpeed.Y;
+                            position.Y += 35;
                         else if (isRotationUp && position.Y > 50)
-                            position.Y -=(int) recSpeed.Y;
+                            position.Y -= 35;
                     }
                     else if (position.Y < 50) //if barry hits the roof , this will make his speed 0 and will ajdust it's positionition
                     {
@@ -101,9 +101,8 @@ namespace Project
                         recSpeed.Y = 0;
                     }
                     oldState = Keyboard.GetState();
+                    oldMouseState = Mouse.GetState();
                 }
-
-
             }
             else
             {
