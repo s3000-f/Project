@@ -38,10 +38,10 @@ namespace Project
         public bool switchBack(int x,int count)
         {
             
-            if (position.X + backGround.Width < 0)
+            if (position.X + position.Width < 0)
             {
                 load(count);
-                position.X = x;
+                position.X = MaxX-5;
                 return true;
             }
             return false;
