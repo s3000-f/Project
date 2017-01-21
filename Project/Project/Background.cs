@@ -38,10 +38,10 @@ namespace Project
         public bool switchBack(int x,int count)
         {
             
-            if (position.X + position.Width <= 0)
+            if (position.X + position.Width <= 20)
             {
                 load(count);
-                position.X = x;
+                position.X = position.X+2*position.Width;
                 return true;
             }
             return false;

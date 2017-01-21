@@ -58,6 +58,14 @@ namespace Project
                  digitsCoin.Add(Content.Load<Texture2D>("Score\\" + i+"g"));
             }
         }
+        public int getAllCoins()
+        {
+            return allCoins;
+        }
+        public void setAllCoins(int coins)
+        {
+            allCoins = coins;
+        }
         public void gotCoins()
         {
             takenCoins++;
@@ -80,16 +88,12 @@ namespace Project
         {
             if (meters > bestScore)
             {
-                File.writeFile("" + meters + "," + (allCoins+takenCoins));
+                File.writeFile("" + meters + "," + (allCoins + takenCoins));
             }
             else
             {
                 File.writeFile("" + bestScore + "," + (allCoins + takenCoins));
             }
-        }
-        public int getAllCoins()
-        {
-            return allCoins;
         }
         public void drawScore(SpriteBatch spriteBatch)
         {

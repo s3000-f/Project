@@ -513,12 +513,12 @@ namespace Project
                 case 0:
                     lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,100, new Rectangle(0, -300, 1920, 180)));
                     lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,280, new Rectangle(0, -300, 1920, 180)));
-                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-100, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-170, new Rectangle(0, -300, 1920, 180)));
                     lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-280, new Rectangle(0, -300, 1920, 180)));
                     break;
                 case 1:
                     lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,100, new Rectangle(0, -300, 1920, 180)));
-                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-100, new Rectangle(0, -300, 1920, 180)));
+                    lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,1080-170, new Rectangle(0, -300, 1920, 180)));
                     break;
                 case 2:
                     lazerList.Add(new Lazer(Content, 1920, 1080, 0, 0,360, new Rectangle(0, -300, 1920, 180)));

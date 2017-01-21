@@ -347,6 +347,28 @@ namespace Project
                         isDead = false;
                         startUp();
                     }
+                    r.X = 350;
+                    r.Y = 590;
+                    r.Width = 200;
+                    r.Height = 200;
+                    if (r.Contains(p))
+                    {
+                        int x = 0;
+                        if ((x = score.getAllCoins()) > 1500)
+                        {
+                            score.setAllCoins(x - 1500);
+                            gameMode = 1;
+                            isDead = false;
+                            barry.isDead = false;
+                            barry.finalDeath = false;
+                            barry.wasDead = false;
+                            barry.wasFallen = false;
+
+                            barry.position.Y = 500;
+                        }
+
+                        //score.
+                    }
                 }
             }
             else if (gameMode == 4)
@@ -713,7 +735,9 @@ namespace Project
             {
 
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                spriteBatch.Draw(Content.Load<Texture2D>("revive"), new Rectangle(350, 590, 200, 200), Color.White);
                 spriteBatch.Draw(gameOver, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
+
                 spriteBatch.End();
 
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);

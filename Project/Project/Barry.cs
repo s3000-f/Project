@@ -15,14 +15,12 @@ namespace Project
     {
         Texture2D barry;
         public bool isGravityActive = false;
-        bool b = true;//mozakhrafe jahat e shetab dar gravity
-        bool c = true;//mozakhrafe jahat e soraate dar gravity
         bool isRotationUp = false;
         float elapsedDeath;
         public bool isDead = false;
-        bool wasDead = false;
-        bool wasFallen = false;
-        bool finalDeath = false;
+        public bool wasDead = false;
+        public bool wasFallen = false;
+        public bool finalDeath = false;
         Vector2 recSpeed;
         Vector2 recAcc;
         Vector2 gravity;
