@@ -758,6 +758,10 @@ namespace Project
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 spriteBatch.Draw(Content.Load<Texture2D>("highscore"), new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                score.drawHighScore(spriteBatch);
+                spriteBatch.End();
+
             }
             else if (gameMode == 5)
             {

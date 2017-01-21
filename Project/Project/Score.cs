@@ -284,5 +284,50 @@ namespace Project
             
         }
 
+        public void drawHighScore(SpriteBatch spriteBatch)
+        {
+            char[] metr = bestScore.ToString().ToCharArray();
+            int i = 0;
+            while (i < metr.Length)
+            {
+                switch (metr[i])
+                {
+                    case '0':
+                        spriteBatch.Draw(digits[0], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '1':
+                        spriteBatch.Draw(digits[1], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '2':
+                        spriteBatch.Draw(digits[2], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '3':
+                        spriteBatch.Draw(digits[3], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '4':
+                        spriteBatch.Draw(digits[4], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '5':
+                        spriteBatch.Draw(digits[5], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '6':
+                        spriteBatch.Draw(digits[6], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '7':
+                        spriteBatch.Draw(digits[7], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '8':
+                        spriteBatch.Draw(digits[8], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                    case '9':
+                        spriteBatch.Draw(digits[9], new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+                        break;
+                }
+                i++;
+            }
+            spriteBatch.Draw(mSign, new Rectangle(750 + i * 86, 500, 84, 144), Color.White);
+
+        }
+
     }
 }
